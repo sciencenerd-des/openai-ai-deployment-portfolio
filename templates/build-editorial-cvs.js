@@ -155,6 +155,7 @@ function renderCv(cv) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(sharedContact.name)} - ${escapeHtml(cv.role)}</title>
   <link rel="stylesheet" href="/templates/editorial-cv.css" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body class="${cv.theme}">
   <main class="page">
