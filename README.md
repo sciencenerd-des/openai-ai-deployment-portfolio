@@ -42,6 +42,7 @@ I am a non-traditional AI deployment candidate focused on practical LLM systems:
 - [Application Tracker](13_application_tracker.md)
 - [Submission Checklist](14_submission_checklist.md)
 - [Publish Plan](15_publish_plan.md)
+- [Application Packet](16_application_packet.md)
 
 ## Positioning
 
