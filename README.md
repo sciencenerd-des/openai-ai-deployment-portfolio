@@ -1,5 +1,7 @@
 # AI Deployment Portfolio - Biswajit Mondal
 
+Public portfolio URL: https://github.com/sciencenerd-des/openai-ai-deployment-portfolio
+
 This portfolio summarizes my work across practical AI deployment, agentic workflows, eval-driven development, human-in-the-loop systems, and AI-assisted software engineering.
 
 I am a non-traditional AI deployment candidate focused on practical LLM systems: multi-agent orchestration, AI-assisted coding workflows, human-in-the-loop pipelines, eval-driven reliability, and India-specific startup use cases. My audit background gives me strong instincts for traceability, failure modes, documentation, insufficient-data handling, review trails, and operational controls.

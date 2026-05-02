@@ -11,7 +11,7 @@ I am a non-traditional AI deployment candidate focused on practical LLM systems:
 
 ## Portfolio Link
 
-Add the public GitHub URL here after publishing.
+https://github.com/sciencenerd-des/openai-ai-deployment-portfolio
 
 ## Live Role Source Check
 
