@@ -1,0 +1,244 @@
+:root {
+  --ink: #171717;
+  --muted: #5f666d;
+  --rule: #d8d2c8;
+  --paper: #fbfaf7;
+  --panel: #f1eee8;
+  --accent: #1f5d50;
+  --accent-2: #963f2f;
+  --serif: "Georgia", "Times New Roman", serif;
+  --sans: "Inter", "Aptos", "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #e8e4dc;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 10.4px;
+  line-height: 1.42;
+}
+
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 15mm 14mm 13mm;
+  background: var(--paper);
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: 1fr 52mm;
+  gap: 12mm;
+  padding-bottom: 7mm;
+  border-bottom: 1px solid var(--ink);
+}
+
+.eyebrow {
+  margin: 0 0 4mm;
+  color: var(--accent);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.title {
+  max-width: 122mm;
+  margin: 4mm 0 0;
+  color: #2f3437;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.contact {
+  align-self: end;
+  padding: 4mm 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.55;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.contact .portfolio {
+  display: block;
+  margin-left: auto;
+  max-width: 44mm;
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: 1fr 56mm;
+  gap: 10mm;
+  padding: 7mm 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.summary {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.38;
+}
+
+.role-card {
+  padding: 4mm;
+  background: var(--panel);
+  border-left: 3px solid var(--accent);
+}
+
+.role-label {
+  margin: 0 0 2mm;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.role {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 58mm;
+  gap: 10mm;
+  padding-top: 7mm;
+}
+
+section {
+  break-inside: avoid;
+}
+
+h2 {
+  margin: 0 0 4mm;
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.project {
+  padding: 0 0 4.5mm;
+  margin: 0 0 4.5mm;
+  border-bottom: 1px solid var(--rule);
+  break-inside: avoid;
+}
+
+.project:last-child {
+  border-bottom: 0;
+}
+
+h3 {
+  margin: 0 0 2mm;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.12;
+}
+
+h3 span {
+  font: inherit;
+}
+
+h3 span::before {
+  content: " - ";
+  color: var(--muted);
+  font-family: var(--sans);
+  font-weight: 500;
+}
+
+ul {
+  margin: 0;
+  padding-left: 4.2mm;
+}
+
+li {
+  margin: 0 0 1.4mm;
+  padding-left: 1mm;
+}
+
+.side-section {
+  margin-bottom: 7mm;
+}
+
+.strength-list {
+  list-style: none;
+  padding: 0;
+}
+
+.strength-list li {
+  margin-bottom: 2.3mm;
+  padding: 0 0 2.3mm;
+  border-bottom: 1px solid var(--rule);
+}
+
+.quote {
+  margin: 0;
+  padding: 4mm;
+  background: #fff;
+  border: 1px solid var(--rule);
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.footer {
+  margin-top: 7mm;
+  padding-top: 3mm;
+  border-top: 1px solid var(--ink);
+  color: var(--muted);
+  font-size: 8.5px;
+}
+
+.codex {
+  --accent: #315c9a;
+  --accent-2: #8b5b1f;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    background: var(--paper);
+  }
+
+  .page {
+    margin: 0;
+    box-shadow: none;
+  }
+}
