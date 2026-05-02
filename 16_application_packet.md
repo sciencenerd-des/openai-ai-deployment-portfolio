@@ -13,6 +13,13 @@ I am a non-traditional AI deployment candidate focused on practical LLM systems:
 
 Add the public GitHub URL here after publishing.
 
+## Live Role Source Check
+
+The OpenAI role pages were checked with browser automation on 2026-05-02.
+
+- Startups role: emphasizes strategic startup customers, ideation to development/delivery/scale, API prototyping, business impact, open-source resources, product/model feedback, and startup ecosystem relationships.
+- Codex role: emphasizes Codex adoption across the SDLC, AI-enhanced development workflows, demos/reference implementations, workshops, public guides/patterns, product feedback, architecture, operational readiness, security, and best practices.
+
 ## Best Projects to Link
 
 ### For Codex
@@ -51,3 +58,12 @@ Thank you, that is helpful. If you feel the profile is relevant, would you be co
 ## Interview Anchor
 
 AI deployment is not only about making demos work. It is about reliability, traceability, failure handling, documentation, controls, and helping real users trust the system. My audit background trained those instincts, and my AI projects show how I apply them to LLM systems and coding workflows.
+
+## Application-Ready Files
+
+- `18_resume_startups_application_ready.md`
+- `19_resume_codex_application_ready.md`
+- `20_cover_letter_startups_application_ready.md`
+- `21_cover_letter_codex_application_ready.md`
+- `22_application_form_answers.md`
+- `23_referral_and_outreach_ready.md`

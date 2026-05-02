@@ -43,6 +43,13 @@ I am a non-traditional AI deployment candidate focused on practical LLM systems:
 - [Submission Checklist](14_submission_checklist.md)
 - [Publish Plan](15_publish_plan.md)
 - [Application Packet](16_application_packet.md)
+- [Live Role Alignment Matrix](17_live_role_alignment_matrix.md)
+- [Startups Resume - Application Ready](18_resume_startups_application_ready.md)
+- [Codex Resume - Application Ready](19_resume_codex_application_ready.md)
+- [Startups Cover Letter - Application Ready](20_cover_letter_startups_application_ready.md)
+- [Codex Cover Letter - Application Ready](21_cover_letter_codex_application_ready.md)
+- [Application Form Answers](22_application_form_answers.md)
+- [Referral And Outreach Ready](23_referral_and_outreach_ready.md)
 
 ## Positioning
 

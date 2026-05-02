@@ -34,7 +34,7 @@ Use this positioning sentence:
 
 ## Do Not Say
 
-- I know I do not meet the requirements.
+- My profile is weaker than the formal checklist.
 - I can learn anything.
 - I am passionate about AI.
 - I have many unfinished projects.
