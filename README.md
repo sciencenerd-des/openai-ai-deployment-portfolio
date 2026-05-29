@@ -115,6 +115,13 @@ OpenAI **Agents SDK** · **Responses API** (multimodal/vision) · FastAPI · Pyd
 A full walkthrough of how this is built — and how to build your own structured
 multimodal agent — is in [`docs/TUTORIAL.md`](docs/TUTORIAL.md).
 
+## Product research
+
+Market analysis of the Indian GST/taxation space — pain points, competitive
+feature landscape, primary GSTN/NIC API reference, detailed feature specs, and a
+scoped reconciliation backlog — is in [`docs/market-research.md`](docs/market-research.md).
+It's what drives the roadmap above.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
