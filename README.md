@@ -2,7 +2,7 @@
 
 **Multimodal GST-document understanding for Indian SMBs — built on the OpenAI Agents SDK + Responses API.**
 
-[Live demo](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md) · [Blog](docs/blog/index.md)
+[Live demo](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md)
 
 [![CI](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
@@ -143,13 +143,6 @@ OpenAI **Agents SDK** · **Responses API** (multimodal/vision) · FastAPI · Pyd
 
 A full walkthrough of how this is built — and how to build your own structured
 multimodal agent — is in [`docs/TUTORIAL.md`](docs/TUTORIAL.md).
-
-## Blog posts
-
-- [Model Reads, Code Judges](docs/blog/model-reads-code-judges.md) explains the
-  perception-vs-judgment architecture behind the app.
-- [Eval-Gating an LLM Feature](docs/blog/eval-gating-llm-feature.md) explains how
-  the deterministic audit layer becomes a hard CI quality gate.
 
 ## Product research
 
