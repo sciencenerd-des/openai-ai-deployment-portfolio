@@ -2,6 +2,8 @@
 
 **Multimodal GST-document understanding for Indian SMBs — built on the OpenAI Agents SDK + Responses API.**
 
+[Live demo](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md)
+
 [![CI](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -28,9 +30,10 @@ See [`docs/architecture.md`](docs/architecture.md) for the full diagram and rati
 |---|---|
 | ![Validated](docs/screenshots/validated.png) | ![Flagged](docs/screenshots/flagged.png) |
 
-The interface is styled as an *auditor's ledger* — warm paper, ledger rules, and a
-rubber-stamp verdict — rather than a generic dashboard. The bad GSTIN and broken
-totals on the right are caught by the deterministic audit layer, not the model.
+The interface is styled as a quiet professional review console: the model
+extracts structure, and deterministic validation makes the final audit call. The
+bad GSTIN and broken totals on the right are caught by the deterministic audit
+layer, not the model.
 
 ## Quickstart (zero API key, ~30 seconds)
 
@@ -90,7 +93,7 @@ app/
   schemas.py     Pydantic models (ExtractedInvoice, Anomaly, AnalysisReport)
   validators.py  GSTIN checksum + arithmetic/anomaly checks (pure, tested)
   mock.py        deterministic fixtures for offline mode
-web/index.html   single-page UI (Tailwind CDN, no build step)
+web/index.html   single-page UI (plain HTML/CSS/JS, no build step)
 evals/           labelled dataset + scoring harness (CI regression gate)
 tests/           pytest, runs fully offline
 docs/            architecture + a build-it-yourself tutorial
