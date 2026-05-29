@@ -444,18 +444,70 @@
     const fmt = (n) => (n === null || n === undefined) ? "—"
       : Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+    const mockClean = {
+      document_type: "tax_invoice", invoice_number: "INV-2024-0042", invoice_date: "2024-11-18",
+      supplier_name: "Saraswati Traders", supplier_gstin: "27AAPFU0939F1ZV",
+      buyer_name: "Bharat Kirana Store", buyer_gstin: "27AACCM1234C1Z2",
+      place_of_supply: "Maharashtra (27)", currency: "INR", detected_language: "en",
+      line_items: [
+        { description: "Basmati Rice 25kg", hsn_sac: "1006", quantity: 4, unit_price: 1450, amount: 5800 },
+        { description: "Sunflower Oil 15L", hsn_sac: "1512", quantity: 3, unit_price: 1980, amount: 5940 }
+      ],
+      subtotal: 11740, total_tax: 587, grand_total: 12327,
+      tax_breakup: { taxable_value: 11740, cgst: 293.5, sgst: 293.5, igst: 0 }
+    };
+    const mockDirty = {
+      ...mockClean, invoice_number: "9921", supplier_name: "Krishna Mobile House",
+      supplier_gstin: "29AAAAA0000A1Z9", buyer_name: null, buyer_gstin: null,
+      line_items: [{ description: "USB-C Cable", hsn_sac: "8544", quantity: 2, unit_price: 299, amount: 698 }],
+      subtotal: 598, total_tax: 107.64, grand_total: 820,
+      tax_breakup: { taxable_value: 598, cgst: 53.82, sgst: 53.82, igst: 20 }
+    };
+
+    function mockAnalysisReport(text) {
+      const dirty = String(text || "").toLowerCase().includes("dirty");
+      const extracted = dirty ? mockDirty : mockClean;
+      const anomalies = dirty ? [
+        { code: "gstin_invalid", severity: "error", message: "supplier_gstin '29AAAAA0000A1Z9' is invalid: checksum mismatch.", field: "supplier_gstin" },
+        { code: "line_amount_mismatch", severity: "warning", message: "Line 1 'USB-C Cable': 2 x 299 = 598, but amount is 698.", field: "line_items[0]" },
+        { code: "grand_total_mismatch", severity: "error", message: "subtotal 598 + tax 107.64 = 705.64, but grand total is 820.", field: "grand_total" },
+        { code: "mixed_tax_heads", severity: "error", message: "Both IGST and CGST/SGST present; a supply is either inter- or intra-state.", field: "tax_breakup" }
+      ] : [];
+      return { mode: "mock", extracted, anomalies, confidence: dirty ? 0 : 1 };
+    }
+
+    function mockReconReport() {
+      return {
+        period: "2026-04",
+        summary: { total: 6, claimable_itc: 1487, deferred_itc: 180, blocked_itc: 2610 },
+        matches: [
+          { status: "matched", ims_action: "accept", register_line: { supplier_gstin: "27AAPFU0939F1ZV", invoice_number: "INV-2026-0042", invoice_date: "2026-04-18", cgst: 293.5, sgst: 293.5 }, gstr2b_line: null, itc: { verdict: "claim", reasons: ["Matched in GSTR-2B within tolerance."] } },
+          { status: "value_mismatch_rounding", ims_action: "accept", register_line: { supplier_gstin: "29AABCT1332L1ZA", invoice_number: "KA-88", invoice_date: "2026-04-20", igst: 900 }, gstr2b_line: null, itc: { verdict: "claim", reasons: ["Only rounding-level value deltas are present."] } },
+          { status: "value_mismatch_material", ims_action: "reject", register_line: { supplier_gstin: "07AAACG2115R1ZJ", invoice_number: "DEL-12", invoice_date: "2026-04-22", igst: 1800 }, gstr2b_line: null, itc: { verdict: "block", reasons: ["Material value mismatch exceeds the rupee tolerance."] } },
+          { status: "in_register_not_2b", ims_action: "pending", register_line: { supplier_gstin: "08AAACH7409R1Z6", invoice_number: "RJ-19", invoice_date: "2026-04-26", cgst: 90, sgst: 90 }, gstr2b_line: null, itc: { verdict: "defer", reasons: ["Purchase exists in register but is absent from static GSTR-2B."] } },
+          { status: "in_2b_not_register", ims_action: "reject", register_line: null, gstr2b_line: { ctin: "24AAACC1206D1ZM", invoice_number: "GJ-204", invoice_date: "2026-04-25", igst: 396 }, itc: { verdict: "block", reasons: ["Invoice appears in GSTR-2B but is missing from the purchase register."] } },
+          { status: "matched", ims_action: "accept", register_line: { supplier_gstin: "33AAAAA0000A1Z9", invoice_number: "FOOD-7", invoice_date: "2026-04-24", cgst: 270, sgst: 270 }, gstr2b_line: null, itc: { verdict: "block", reasons: ["Section 17(5) blocked category: food."] } }
+        ]
+      };
+    }
+
+    async function apiJson(url, options, fallback) {
+      try {
+        const r = await fetch(url, options);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return await r.json();
+      } catch (e) {
+        return typeof fallback === "function" ? fallback(e) : fallback;
+      }
+    }
 
     /* ---- health ---- */
     async function loadHealth() {
-      try {
-        const h = await (await fetch("/api/health")).json();
-        const b = $("mode-badge");
-        b.className = "badge " + h.mode;
-        b.querySelector(".txt").textContent = h.mode.toUpperCase() + " MODE";
-        $("meta-right").textContent = "model · " + h.model;
-      } catch (e) {
-        $("mode-badge").querySelector(".txt").textContent = "offline";
-      }
+      const h = await apiJson("/api/health", undefined, { mode: "mock", model: "static fallback" });
+      const b = $("mode-badge");
+      b.className = "badge " + h.mode;
+      b.querySelector(".txt").textContent = h.mode.toUpperCase() + " MODE";
+      $("meta-right").textContent = "model · " + h.model;
     }
 
     /* ---- file handling ---- */
@@ -617,9 +669,7 @@
         const fd = new FormData();
         if (fileInput.files[0]) fd.append("file", fileInput.files[0]);
         if ($("text").value) fd.append("text", $("text").value);
-        const r = await fetch("/api/analyze", { method: "POST", body: fd });
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        render(await r.json());
+        render(await apiJson("/api/analyze", { method: "POST", body: fd }, () => mockAnalysisReport($("text").value)));
         $("status").textContent = "Analysis complete.";
       } catch (e) {
         $("status").textContent = "Error: " + e.message;
@@ -634,9 +684,7 @@
       btn.classList.add("loading"); btn.disabled = true;
       btn.querySelector(".lbl").textContent = "Reconciling...";
       try {
-        const r = await fetch("/api/reconcile/sample");
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        renderRecon(await r.json());
+        renderRecon(await apiJson("/api/reconcile/sample", undefined, mockReconReport()));
       } catch (e) {
         $("recon").innerHTML = `<div class="note error"><span class="sev">error</span><span>${esc(e.message)}</span></div>`;
       } finally {
@@ -646,19 +694,18 @@
     });
 
     $("run-followups").addEventListener("click", async () => withButton("run-followups", "Drafting...", async () => {
-      const report = await (await fetch("/api/reconcile/sample")).json();
-      const r = await fetch("/api/followups", {
+      const report = await apiJson("/api/reconcile/sample", undefined, mockReconReport());
+      const result = await apiJson("/api/followups", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(report)
-      });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      renderWorkflow("Vendor follow-up drafts", await r.json());
+      }, [{ supplier_gstin: "08AAACH7409R1Z6", subject: "Action required: invoice RJ-19 missing from GSTR-2B", body: "Please upload or amend invoice RJ-19 so ITC can reflect in GSTR-2B.", severity: "itc_at_risk", invoice_numbers: ["RJ-19"], requires_approval: true }]);
+      renderWorkflow("Vendor follow-up drafts", result);
       $("run-followups").querySelector(".lbl").textContent = "Draft follow-ups";
     }));
 
     $("run-prefile").addEventListener("click", async () => withButton("run-prefile", "Checking...", async () => {
-      const r = await fetch("/api/prefile-check", {
+      const result = await apiJson("/api/prefile-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -668,31 +715,28 @@
           gstr3b_taxable_value: 900000,
           gstr3b_tax: 70000
         })
-      });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      renderWorkflow("Pre-file mismatch check", await r.json());
+      }, { period: "2026-04", rule_88c_risk: true, taxable_delta: 100000, tax_delta: 110000, severity: "error", message: "Material tax mismatch may trigger a Rule 88C-style notice workflow." });
+      renderWorkflow("Pre-file mismatch check", result);
       $("run-prefile").querySelector(".lbl").textContent = "Check GSTR-1 vs 3B";
     }));
 
     $("run-notice").addEventListener("click", async () => withButton("run-notice", "Triaging...", async () => {
-      const r = await fetch("/api/notices/triage", {
+      const result = await apiJson("/api/notices/triage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ period: "2026-04", text: "DRC-01C issued under Rule 88D for excess ITC compared with GSTR-2B." })
-      });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      renderWorkflow("Notice triage", await r.json());
+      }, { notice_type: "drc_01c", risk: "high", deadline_days: 7, issues: ["ITC claimed appears higher than GSTR-2B credit."], draft_reply: "Draft reply for 2026-04: We acknowledge the notice and are reconciling the underlying GST returns, purchase register, and supporting invoices.", citations: ["CGST Rule 88C/88D guidance requires source verification before filing a reply."], requires_human_review: true });
+      renderWorkflow("Notice triage", result);
       $("run-notice").querySelector(".lbl").textContent = "Triage notice";
     }));
 
     $("run-batch").addEventListener("click", async () => withButton("run-batch", "Analyzing...", async () => {
-      const r = await fetch("/api/analyze/batch", {
+      const result = await apiJson("/api/analyze/batch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ texts: ["normal invoice", "dirty receipt with anomaly"] })
-      });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      renderWorkflow("Batch analysis", await r.json());
+      }, [mockAnalysisReport("normal invoice"), mockAnalysisReport("dirty")]);
+      renderWorkflow("Batch analysis", result);
       $("run-batch").querySelector(".lbl").textContent = "Batch analyze";
     }));
 
