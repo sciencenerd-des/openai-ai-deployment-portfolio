@@ -4,392 +4,276 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bharat Doc Intelligence</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234cc9f0'/%3E%3Ctext x='16' y='22' font-family='monospace' font-weight='700' font-size='13' fill='%23080b0d' text-anchor='middle'%3EBDI%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23161618'/%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7.5' fill='none' stroke='%23ffffff' stroke-opacity='.14'/%3E%3Ctext x='16' y='21' font-family='Helvetica,Arial' font-weight='600' font-size='12' fill='%23ededef' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Onest:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:   #080b0d;
-      --s1:   #0e1114;
-      --s2:   #141719;
-      --s3:   #1c2024;
-      --b:    rgba(255,255,255,.07);
-      --b2:   rgba(255,255,255,.13);
-      --b3:   rgba(255,255,255,.2);
-      --text: #dde1e7;
-      --sub:  #9299a4;
-      --dim:  #515966;
-      --cyan: #4cc9f0;
-      --cy-d: rgba(76,201,240,.1);
-      --cy-b: rgba(76,201,240,.25);
-      --grn:  #4ade80;
-      --gr-d: rgba(74,222,128,.1);
-      --red:  #f87171;
-      --re-d: rgba(248,113,113,.1);
-      --org:  #fb923c;
-      --or-d: rgba(251,146,60,.1);
-      --mono: 'Space Mono', ui-monospace, monospace;
-      --head: 'Syne', system-ui, sans-serif;
-      --sans: 'Onest', system-ui, sans-serif;
+      --bg:    #08080a;
+      --card:  #0d0d0f;
+      --inset: #121214;
+      --hover: #141417;
+      --b:     rgba(255,255,255,.07);
+      --b2:    rgba(255,255,255,.11);
+      --b3:    rgba(255,255,255,.16);
+      --fg:    #ededef;   /* near-white headings */
+      --fg2:   #9d9da6;   /* silver body */
+      --fg3:   #6a6a73;   /* muted */
+      --fg4:   #45454d;   /* faint */
+      --grn:   #3fb950;
+      --red:   #f0524a;
+      --amb:   #d29922;
+      --accent:#cdcdf2;   /* barely-there cool accent for focus only */
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --r: 9px;
     }
 
     *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-    html { -webkit-font-smoothing:antialiased; }
-
+    html { -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
     body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
-      overflow-x: hidden;
+      font-family:var(--sans);
+      background:var(--bg);
+      color:var(--fg2);
+      min-height:100vh;
+      line-height:1.55;
+      letter-spacing:-.011em;
+      font-variant-numeric:tabular-nums;
+      font-size:14px;
     }
+    ::selection { background:rgba(205,205,242,.2); }
 
-    /* atmosphere */
-    body::before {
-      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-      background-image: radial-gradient(circle, rgba(255,255,255,.022) 1px, transparent 1px);
-      background-size: 28px 28px;
-    }
-    body::after {
-      content:''; position:fixed; top:0; left:0; right:0; height:340px;
-      pointer-events:none; z-index:0;
-      background: radial-gradient(ellipse at 60% -20%, rgba(76,201,240,.065) 0%, transparent 62%);
-    }
+    .wrap { max-width:1200px; margin:0 auto; padding:0 28px; }
 
-    .wrap { max-width:1260px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
-
-    /* ── sticky header ── */
+    /* ── header ── */
     .hdr {
-      position:sticky; top:0; z-index:200;
-      background: rgba(8,11,13,.88);
-      backdrop-filter: blur(18px) saturate(1.6);
-      border-bottom: 1px solid var(--b);
+      position:sticky; top:0; z-index:100;
+      background:rgba(8,8,10,.82);
+      backdrop-filter:blur(14px) saturate(1.4);
+      border-bottom:1px solid var(--b);
     }
-    .hdr-inner {
-      display:flex; align-items:center; gap:16px;
-      padding:0 24px; height:54px;
-    }
+    .hdr-in { display:flex; align-items:stretch; gap:28px; height:56px; max-width:1200px; margin:0 auto; padding:0 28px; }
 
-    /* logo */
-    .logo-wrap { display:flex; align-items:center; gap:9px; flex:none; text-decoration:none; }
-    .logo-mark {
-      width:29px; height:29px; border-radius:7px; flex:none;
-      background:var(--cyan); display:grid; place-items:center;
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; flex:none; }
+    .mark {
+      width:28px; height:28px; border-radius:8px; flex:none;
+      background:#161618; border:1px solid var(--b2);
+      display:grid; place-items:center;
+      font-weight:600; font-size:13px; color:var(--fg);
     }
-    .logo-mark span {
-      font-family:var(--head); font-size:11.5px; font-weight:800;
-      color:#080b0d; letter-spacing:-.01em;
-    }
-    .logo-text-wrap { display:flex; flex-direction:column; gap:0; }
-    .logo-name { font-family:var(--head); font-size:14px; font-weight:700; letter-spacing:-.01em; color:var(--text); line-height:1.2; }
-    .logo-tag  { font-family:var(--mono); font-size:9px; color:var(--dim); letter-spacing:.06em; line-height:1; }
+    .brand-t { font-weight:600; font-size:14px; color:var(--fg); letter-spacing:-.02em; }
 
-    /* tabs */
-    .tabs { display:flex; gap:2px; flex:1; padding-left:4px; }
+    nav { display:flex; align-items:stretch; gap:4px; flex:1; }
     .tab {
-      font-family:var(--sans); font-size:13px; font-weight:500;
-      color:var(--sub); background:transparent; border:none; cursor:pointer;
-      padding:7px 13px; border-radius:6px; transition:color .14s, background .14s;
-      white-space:nowrap;
+      position:relative; display:flex; align-items:center;
+      font-family:var(--sans); font-size:13.5px; font-weight:450;
+      color:var(--fg3); background:none; border:none; cursor:pointer;
+      padding:0 4px; transition:color .14s;
     }
-    .tab:hover { color:var(--text); background:rgba(255,255,255,.04); }
-    .tab.on { color:var(--text); background:var(--s2); }
-
-    /* mode badge */
-    .mbadge {
-      font-family:var(--mono); font-size:10.5px;
-      border:1px solid var(--b); border-radius:999px;
-      padding:5px 11px; display:flex; align-items:center; gap:7px;
-      color:var(--sub); flex:none;
+    .tab:hover { color:var(--fg2); }
+    .tab.on { color:var(--fg); }
+    .tab.on::after {
+      content:''; position:absolute; left:0; right:0; bottom:-1px; height:1.5px;
+      background:var(--fg); border-radius:2px;
     }
-    .pip { width:6px; height:6px; border-radius:50%; background:var(--dim); flex:none; }
-    .mbadge.mock .pip { background:var(--org); box-shadow:0 0 0 3px rgba(251,146,60,.15); }
-    .mbadge.live .pip { background:var(--grn); box-shadow:0 0 0 3px rgba(74,222,128,.15); }
 
-    /* ── main ── */
-    main { padding:24px 0 72px; }
+    .status {
+      display:flex; align-items:center; gap:8px; flex:none;
+      font-size:12px; color:var(--fg3); font-weight:450;
+    }
+    .status .dot { width:6px; height:6px; border-radius:50%; background:var(--fg4); }
+    .status.mock .dot { background:var(--amb); }
+    .status.live .dot { background:var(--grn); }
+    .status .mono { font-family:var(--mono); font-size:11px; color:var(--fg3); }
+
+    /* ── page intro ── */
+    main { padding:36px 0 88px; }
+    .intro { margin-bottom:26px; }
+    .intro h1 { font-size:21px; font-weight:600; color:var(--fg); letter-spacing:-.03em; }
+    .intro p { font-size:13.5px; color:var(--fg3); margin-top:5px; max-width:64ch; }
 
     .pane { display:none; }
-    .pane.on { display:block; animation:up .2s ease both; }
-    @keyframes up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+    .pane.on { display:block; animation:fade .18s ease both; }
+    @keyframes fade { from { opacity:0; } to { opacity:1; } }
 
     /* ── cards ── */
-    .card {
-      background:var(--s1); border:1px solid var(--b);
-      border-radius:10px; overflow:hidden;
-    }
-    .card-head {
-      padding:13px 18px; border-bottom:1px solid var(--b);
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .card-title {
-      font-family:var(--head); font-size:11.5px; font-weight:700;
-      letter-spacing:.07em; text-transform:uppercase; color:var(--dim);
-    }
-    .card-body { padding:18px; }
+    .card { background:var(--card); border:1px solid var(--b); border-radius:var(--r); }
+    .card + .card { margin-top:14px; }
+    .ch { padding:14px 18px; border-bottom:1px solid var(--b); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .ct { font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--fg3); }
+    .cb { padding:18px; }
 
-    /* two-col for analyze */
-    .two-col { display:grid; grid-template-columns:356px 1fr; gap:14px; align-items:start; }
-    @media (max-width:860px) { .two-col { grid-template-columns:1fr; } }
+    .cols { display:grid; grid-template-columns:380px 1fr; gap:14px; align-items:start; }
+    @media (max-width:880px) { .cols { grid-template-columns:1fr; } }
 
     /* ── form ── */
-    .lbl { display:block; font-size:12px; font-weight:500; color:var(--sub); margin-bottom:7px; }
+    .lbl { display:block; font-size:12px; font-weight:500; color:var(--fg2); margin-bottom:8px; }
 
-    .dropzone {
-      border:1px dashed rgba(255,255,255,.1); border-radius:9px;
-      background:var(--s2); padding:28px 16px; text-align:center; cursor:pointer;
-      transition:border-color .15s, background .15s;
+    .drop {
+      border:1px dashed var(--b2); border-radius:8px; background:var(--inset);
+      padding:30px 18px; text-align:center; cursor:pointer; transition:border-color .14s, background .14s;
     }
-    .dropzone:hover, .dropzone.drag { border-color:var(--cy-b); background:var(--cy-d); }
-    .dropzone input { display:none; }
-    .dz-icon {
-      width:40px; height:40px; margin:0 auto 11px;
-      border:1px solid var(--b2); border-radius:10px; display:grid; place-items:center;
+    .drop:hover, .drop.drag { border-color:var(--b3); background:var(--hover); }
+    .drop input { display:none; }
+    .drop-ic { width:34px; height:34px; margin:0 auto 11px; border:1px solid var(--b2); border-radius:8px; display:grid; place-items:center; }
+    .drop-ic svg { width:16px; height:16px; stroke:var(--fg2); }
+    .drop-1 { font-size:13px; font-weight:500; color:var(--fg); }
+    .drop-2 { font-size:11px; color:var(--fg4); margin-top:5px; }
+
+    #prev { display:none; margin-top:12px; }
+    #prev img { width:100%; border-radius:7px; border:1px solid var(--b); display:block; }
+    #prev .row { display:flex; justify-content:space-between; font-size:11px; color:var(--fg4); margin-top:6px; }
+    #prev .x { color:var(--fg2); cursor:pointer; }
+
+    .div { display:flex; align-items:center; gap:12px; margin:16px 0; font-size:11px; color:var(--fg4); }
+    .div::before, .div::after { content:''; flex:1; height:1px; background:var(--b); }
+
+    textarea, input[type=text], input[type=number] {
+      width:100%; border:1px solid var(--b); border-radius:8px; background:var(--inset);
+      color:var(--fg); padding:10px 12px; font-family:var(--sans); font-size:13px; line-height:1.55;
+      transition:border-color .14s, box-shadow .14s;
     }
-    .dz-icon svg { width:18px; height:18px; stroke:var(--cyan); }
-    .dz-primary { font-size:13px; font-weight:600; color:var(--text); }
-    .dz-sub { font-family:var(--mono); font-size:9.5px; color:var(--dim); margin-top:5px; }
+    textarea { resize:vertical; min-height:82px; font-family:var(--mono); font-size:12px; }
+    textarea:focus, input:focus { outline:none; border-color:var(--b3); box-shadow:0 0 0 3px rgba(255,255,255,.04); }
+    textarea::placeholder { color:var(--fg4); }
 
-    #prev-wrap { display:none; margin-top:11px; }
-    #prev-img  { width:100%; border-radius:7px; border:1px solid var(--b); display:block; }
-    #prev-row  { display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; color:var(--dim); margin-top:5px; }
-    #prev-del  { color:var(--cyan); cursor:pointer; }
-
-    .divline {
-      display:flex; align-items:center; gap:10px; margin:15px 0;
-      font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim);
-    }
-    .divline::before, .divline::after { content:''; flex:1; height:1px; background:var(--b); }
-
-    textarea {
-      width:100%; border:1px solid var(--b); border-radius:8px;
-      background:var(--s2); color:var(--text);
-      padding:10px 12px; font-family:var(--mono); font-size:12px;
-      resize:vertical; min-height:84px; line-height:1.6;
-    }
-    textarea:focus { outline:none; border-color:var(--cy-b); box-shadow:0 0 0 3px var(--cy-d); }
-
-    input[type=number], input[type=text] {
-      width:100%; border:1px solid var(--b); border-radius:8px;
-      background:var(--s2); color:var(--text);
-      padding:9px 12px; font-family:var(--mono); font-size:13px;
-    }
-    input:focus { outline:none; border-color:var(--cy-b); box-shadow:0 0 0 3px var(--cy-d); }
-
-    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
     /* buttons */
-    .btn-p, .btn-g {
+    .btn {
       border:none; cursor:pointer; border-radius:8px;
-      font-family:var(--head); font-weight:700; letter-spacing:-.01em;
+      font-family:var(--sans); font-weight:500; font-size:13px;
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      transition:opacity .13s, transform .1s;
+      transition:background .14s, border-color .14s, opacity .14s; white-space:nowrap;
     }
-    .btn-p:active, .btn-g:active { transform:scale(.98); }
-    .btn-p:disabled, .btn-g:disabled { opacity:.4; cursor:wait; }
-
-    .btn-p {
-      background:var(--cyan); color:#080b0d;
-      font-size:13.5px; padding:11px 16px; width:100%; margin-top:14px;
-    }
-    .btn-p:hover:not(:disabled) { opacity:.9; }
-
-    .btn-g {
-      background:var(--s2); color:var(--sub);
-      border:1px solid var(--b); font-size:12.5px; padding:7px 13px;
-    }
-    .btn-g:hover:not(:disabled) { border-color:var(--b2); color:var(--text); }
-
-    .spin {
-      width:13px; height:13px; border:2px solid rgba(0,0,0,.18);
-      border-top-color:#080b0d; border-radius:50%;
-      animation:spin .55s linear infinite; display:none; flex:none;
-    }
+    .btn:disabled { opacity:.5; cursor:default; }
+    .btn-primary { background:var(--fg); color:#08080a; padding:9px 15px; }
+    .btn-primary:hover:not(:disabled) { background:#fff; }
+    .btn-primary.block { width:100%; margin-top:15px; }
+    .btn-sec { background:transparent; color:var(--fg2); border:1px solid var(--b2); padding:8px 13px; }
+    .btn-sec:hover:not(:disabled) { border-color:var(--b3); color:var(--fg); background:var(--hover); }
+    .spin { width:12px; height:12px; border:1.5px solid rgba(8,8,10,.25); border-top-color:#08080a; border-radius:50%; animation:spin .6s linear infinite; display:none; }
+    .btn-sec .spin { border-color:rgba(255,255,255,.2); border-top-color:var(--fg); }
     .loading .spin { display:block; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .hint { font-family:var(--mono); font-size:10.5px; color:var(--dim); min-height:14px; margin-top:8px; }
+    .hint { font-size:11.5px; color:var(--fg4); min-height:14px; margin-top:9px; }
+
+    /* ── status dot + text ── */
+    .sd { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+    .sd .d { width:6px; height:6px; border-radius:50%; flex:none; background:var(--fg4); }
+    .sd.g .d { background:var(--grn); }  .sd.g { color:var(--grn); }
+    .sd.r .d { background:var(--red); }  .sd.r { color:var(--red); }
+    .sd.a .d { background:var(--amb); }  .sd.a { color:var(--amb); }
+    .sd.m   { color:var(--fg2); }
 
     /* ── verdict bar ── */
-    .vbar {
-      display:flex; align-items:center; gap:16px;
-      padding:14px 18px; border-bottom:1px solid var(--b); background:var(--s2);
-    }
-    .vchip {
-      font-family:var(--head); font-size:11.5px; font-weight:800;
-      letter-spacing:.1em; text-transform:uppercase;
-      padding:5px 13px; border-radius:5px; flex:none;
-    }
-    .vchip.ok  { color:var(--grn); background:var(--gr-d); }
-    .vchip.bad { color:var(--red); background:var(--re-d); }
+    .vbar { display:flex; align-items:center; gap:20px; padding:16px 18px; border-bottom:1px solid var(--b); }
+    .verdict { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--fg); flex:none; }
+    .verdict .d { width:8px; height:8px; border-radius:50%; }
+    .verdict.ok .d { background:var(--grn); box-shadow:0 0 0 4px rgba(63,185,80,.12); }
+    .verdict.bad .d { background:var(--red); box-shadow:0 0 0 4px rgba(240,82,74,.12); }
     .conf { flex:1; }
-    .conf-top {
-      display:flex; justify-content:space-between; align-items:baseline;
-      font-family:var(--mono); font-size:9.5px; color:var(--sub); margin-bottom:7px;
-    }
-    .conf-top b { font-family:var(--head); font-size:22px; font-weight:700; color:var(--text); letter-spacing:-.02em; }
-    .cbar { height:2px; background:var(--s3); border-radius:2px; overflow:hidden; }
-    .cfill { height:100%; width:0; border-radius:2px; transition:width 1.1s cubic-bezier(.4,0,.2,1); }
-    .conf-sub { font-family:var(--mono); font-size:9px; color:var(--dim); display:flex; gap:12px; margin-top:6px; }
+    .conf-top { display:flex; justify-content:space-between; align-items:baseline; font-size:11px; color:var(--fg3); margin-bottom:8px; }
+    .conf-top b { font-size:15px; font-weight:600; color:var(--fg); }
+    .cbar { height:3px; background:var(--inset); border-radius:3px; overflow:hidden; }
+    .cfill { height:100%; width:0; border-radius:3px; background:var(--fg2); transition:width 1s cubic-bezier(.4,0,.2,1); }
+    .conf-sub { font-size:11px; color:var(--fg4); margin-top:7px; display:flex; gap:14px; }
 
-    /* notes */
-    .note {
-      display:flex; gap:9px; align-items:baseline;
-      padding:9px 12px; border-radius:6px; font-size:12.5px; margin-bottom:6px; line-height:1.5;
-    }
-    .nsev {
-      font-family:var(--mono); font-size:8px; font-weight:700;
-      letter-spacing:.1em; text-transform:uppercase; padding:2px 6px; border-radius:3px; flex:none;
-    }
-    .note.error   { background:var(--re-d); color:#fca5a5; }
-    .note.error   .nsev { background:var(--red); color:#fff; }
-    .note.warning { background:var(--or-d); color:#fdba74; }
-    .note.warning .nsev { background:var(--org); color:#fff; }
-    .note.ok,.note.info { background:var(--gr-d); color:#86efac; }
-    .note.ok .nsev,.note.info .nsev { background:var(--grn); color:#081509; }
-    .note code { font-family:var(--mono); font-size:9px; opacity:.5; margin-left:4px; }
+    /* ── sections ── */
+    .sec { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--fg4); margin:20px 0 11px; }
 
-    /* kv grid */
-    .kv { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--b);
-      border:1px solid var(--b); border-radius:8px; overflow:hidden; }
-    .kvc { background:var(--s2); padding:9px 12px; }
-    .kvc.full { grid-column:1/-1; }
-    .kk { font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
-    .kv- { font-family:var(--mono); font-size:11.5px; color:var(--text); margin-top:2px; word-break:break-all; }
-    .kv-.bad { color:var(--red); }
+    /* anomaly notes */
+    .note { display:flex; gap:10px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--b); font-size:13px; color:var(--fg2); }
+    .note:last-child { border-bottom:none; }
+    .note .nd { width:6px; height:6px; border-radius:50%; flex:none; margin-top:6px; }
+    .note.error .nd { background:var(--red); }
+    .note.warning .nd { background:var(--amb); }
+    .note.ok .nd, .note.info .nd { background:var(--grn); }
+    .note .nsev { font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; flex:none; width:58px; }
+    .note.error .nsev { color:var(--red); }
+    .note.warning .nsev { color:var(--amb); }
+    .note.ok .nsev, .note.info .nsev { color:var(--grn); }
+    .note code { font-family:var(--mono); font-size:10.5px; color:var(--fg4); }
 
-    /* table */
-    .tbl { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11.5px; }
-    .tbl th { font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim);
-      border-bottom:1px solid var(--b); padding:7px 10px; font-weight:600; white-space:nowrap; }
-    .tbl td { padding:8px 10px; border-bottom:1px solid var(--b); }
+    /* kv */
+    .kv { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--b); border-radius:8px; overflow:hidden; }
+    .kvc { padding:11px 14px; border-bottom:1px solid var(--b); }
+    .kvc:nth-child(odd) { border-right:1px solid var(--b); }
+    .kvc:nth-last-child(-n+2) { border-bottom:none; }
+    .kk { font-size:10.5px; color:var(--fg4); letter-spacing:.02em; }
+    .kvv { font-size:13px; color:var(--fg); margin-top:3px; word-break:break-all; }
+    .kvv.mono { font-family:var(--mono); font-size:12px; }
+    .kvv.bad { color:var(--red); }
+
+    /* tables */
+    .tbl { width:100%; border-collapse:collapse; }
+    .tbl th { font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--fg4); padding:9px 12px; text-align:left; border-bottom:1px solid var(--b); white-space:nowrap; }
+    .tbl td { padding:11px 12px; border-bottom:1px solid var(--b); font-size:13px; color:var(--fg); }
     .tbl tr:last-child td { border-bottom:none; }
+    .tbl tbody tr { transition:background .12s; }
+    .tbl tbody tr:hover { background:var(--hover); }
     .tbl .r { text-align:right; }
-    .tbl-wrap { overflow-x:auto; }
+    .tbl .mono { font-family:var(--mono); font-size:12px; }
+    .tbl .sub { font-size:11px; color:var(--fg4); margin-top:2px; }
+    .tw { overflow-x:auto; }
 
-    .totals { padding-top:14px; border-top:1px solid var(--b); margin-top:4px; }
-    .trow { display:flex; justify-content:space-between; align-items:baseline;
-      font-family:var(--mono); font-size:12px; color:var(--sub); padding:3px 0; }
-    .trow.grand {
-      font-family:var(--head); font-size:22px; font-weight:700; color:var(--text);
-      letter-spacing:-.02em; border-top:1px solid var(--b2); padding-top:10px; margin-top:6px;
-    }
+    .totals { padding:16px 18px; border-top:1px solid var(--b); }
+    .trow { display:flex; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--fg3); padding:4px 0; }
+    .trow span:last-child { font-family:var(--mono); font-size:12.5px; color:var(--fg2); }
+    .trow.grand { padding-top:11px; margin-top:6px; border-top:1px solid var(--b); }
+    .trow.grand span:first-child { font-size:14px; font-weight:600; color:var(--fg); }
+    .trow.grand span:last-child { font-size:15px; font-weight:600; color:var(--fg); }
 
-    .sec {
-      font-family:var(--mono); font-size:9px; letter-spacing:.18em; text-transform:uppercase;
-      color:var(--dim); display:flex; align-items:center; gap:8px; margin:18px 0 10px;
-    }
-    .sec::after { content:''; flex:1; height:1px; background:var(--b); }
+    details.raw { padding:14px 18px; border-top:1px solid var(--b); }
+    details.raw summary { font-size:11px; font-weight:500; color:var(--fg3); cursor:pointer; list-style:none; }
+    details.raw summary::-webkit-details-marker { display:none; }
+    details.raw summary::before { content:'→ '; color:var(--fg4); }
+    details.raw[open] summary::before { content:'↓ '; }
+    details.raw pre { background:var(--bg); color:var(--fg3); font-family:var(--mono); font-size:11px; padding:14px; border-radius:7px; overflow:auto; max-height:280px; margin-top:11px; line-height:1.7; border:1px solid var(--b); }
 
-    details.raw { margin-top:16px; }
-    details.raw summary {
-      font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
-      color:var(--dim); cursor:pointer;
-    }
-    details.raw pre {
-      background:#060810; color:#6e7a90; font-family:var(--mono); font-size:10.5px;
-      padding:14px; border-radius:6px; overflow:auto; max-height:260px;
-      margin-top:10px; line-height:1.7; border:1px solid var(--b);
-    }
+    /* empty */
+    .empty { padding:56px 20px; text-align:center; }
+    .empty .t { font-size:12px; color:var(--fg3); font-weight:500; }
+    .empty p { font-size:12.5px; color:var(--fg4); margin-top:7px; max-width:34ch; margin-left:auto; margin-right:auto; }
 
-    /* chips */
-    .chip {
-      font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:.08em;
-      text-transform:uppercase; padding:2px 7px; border-radius:3px; white-space:nowrap;
-    }
-    .chip.claim,.chip.matched,.chip.accept { color:var(--grn); background:var(--gr-d); }
-    .chip.defer,.chip.pending,.chip.missing-2b { color:var(--org); background:var(--or-d); }
-    .chip.block,.chip.reject,.chip.missing-reg,.chip.material { color:var(--red); background:var(--re-d); }
-    .chip.rounding,.chip.none { color:var(--sub); background:var(--s3); }
-    .chip.low  { color:var(--grn); background:var(--gr-d); }
-    .chip.medium { color:var(--org); background:var(--or-d); }
-    .chip.high { color:var(--red); background:var(--re-d); }
-
-    /* ── empty state ── */
-    .empty { text-align:center; padding:48px 16px; }
-    .etag {
-      font-family:var(--mono); font-size:9.5px; letter-spacing:.18em; text-transform:uppercase;
-      color:var(--dim); border:1px solid var(--b); border-radius:4px;
-      padding:7px 14px; display:inline-block;
-    }
-    .empty p { font-size:12.5px; color:var(--dim); margin-top:12px; max-width:28ch; margin-left:auto; margin-right:auto; }
-
-    /* ── reconciliation ── */
-    .rsum {
-      display:flex; flex-wrap:wrap;
-      border-bottom:1px solid var(--b); background:var(--s2);
-    }
-    .rcell { flex:1; min-width:110px; padding:13px 18px; border-right:1px solid var(--b); }
+    /* ── recon summary ── */
+    .rsum { display:grid; grid-template-columns:repeat(6,1fr); border-bottom:1px solid var(--b); }
+    .rcell { padding:15px 18px; border-right:1px solid var(--b); }
     .rcell:last-child { border-right:none; }
-    .rlabel { font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
-    .rval { font-family:var(--head); font-size:21px; font-weight:700; color:var(--text); letter-spacing:-.02em; margin-top:2px; }
-    .rval.g { color:var(--grn); }
-    .rval.o { color:var(--org); }
-    .rval.r { color:var(--red); }
+    .rlab { font-size:10.5px; color:var(--fg4); }
+    .rval { font-size:19px; font-weight:600; color:var(--fg); margin-top:4px; letter-spacing:-.02em; font-family:var(--mono); }
+    .rval.g { color:var(--grn); } .rval.a { color:var(--amb); } .rval.r { color:var(--red); }
+    @media (max-width:880px) { .rsum { grid-template-columns:repeat(3,1fr); } .rcell:nth-child(3) { border-right:none; } }
 
-    .rtbl { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11.5px; }
-    .rtbl th { font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim);
-      border-bottom:1px solid var(--b); padding:10px 14px; font-weight:600; white-space:nowrap; }
-    .rtbl td { padding:11px 14px; border-bottom:1px solid var(--b); vertical-align:middle; }
-    .rtbl tr:last-child td { border-bottom:none; }
-    .rtbl td.r { text-align:right; }
-    /* stagger in */
-    .rtbl tbody tr { opacity:0; animation:up .28s ease forwards; }
-    .rtbl tbody tr:nth-child(1) { animation-delay:.05s; }
-    .rtbl tbody tr:nth-child(2) { animation-delay:.1s; }
-    .rtbl tbody tr:nth-child(3) { animation-delay:.15s; }
-    .rtbl tbody tr:nth-child(4) { animation-delay:.2s; }
-    .rtbl tbody tr:nth-child(5) { animation-delay:.25s; }
-    .rtbl tbody tr:nth-child(n+6) { animation-delay:.28s; }
-    /* left-border verdict accent */
-    .rtbl .lgrn td:first-child { border-left:2.5px solid var(--grn); }
-    .rtbl .lorg td:first-child { border-left:2.5px solid var(--org); }
-    .rtbl .lcyn td:first-child { border-left:2.5px solid var(--cyan); }
-    .rtbl .lred td:first-child { border-left:2.5px solid var(--red); }
-    .rtbl .ldim td:first-child { border-left:2.5px solid var(--dim); }
-    .rmeta { color:var(--dim); font-size:10px; margin-top:3px; }
-    .delta { color:var(--red); }
-    .delta::before { content:'Δ '; font-size:9px; }
-
-    /* ── workflow panels ── */
+    /* ── workflow ── */
     .wgrid { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
-    @media (max-width:860px) { .wgrid { grid-template-columns:1fr; } }
+    @media (max-width:880px) { .wgrid { grid-template-columns:1fr; } }
+    .wdesc { font-size:12.5px; color:var(--fg3); margin-bottom:16px; }
 
-    .rbox { display:none; margin-top:13px; animation:up .2s ease both; }
-    .rbox.show { display:block; }
-    .rinner { background:var(--s2); border:1px solid var(--b); border-radius:8px; }
-    .rrow { display:flex; justify-content:space-between; align-items:center;
-      padding:9px 14px; border-bottom:1px solid var(--b); font-family:var(--mono); font-size:12px; }
-    .rrow:last-child { border-bottom:none; }
-    .rk { color:var(--sub); }
-    .rv { color:var(--text); }
-    .rv.ok  { color:var(--grn); }
-    .rv.warn { color:var(--org); }
-    .rv.err  { color:var(--red); }
-
-    .dbox {
-      background:#06080c; border:1px solid var(--b); border-radius:7px;
-      padding:13px; font-family:var(--mono); font-size:11.5px; color:var(--sub);
-      line-height:1.7; white-space:pre-wrap; margin-top:10px;
-    }
-    .cites { list-style:none; margin-top:10px; }
-    .cites li { font-family:var(--mono); font-size:10.5px; color:var(--dim);
-      padding:5px 0; border-bottom:1px solid var(--b); }
+    .rbox { display:none; margin-top:14px; }
+    .rbox.show { display:block; animation:fade .18s ease both; }
+    .rin { border:1px solid var(--b); border-radius:8px; overflow:hidden; }
+    .rr { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:10px 14px; border-bottom:1px solid var(--b); font-size:13px; }
+    .rr:last-child { border-bottom:none; }
+    .rr .k { color:var(--fg3); }
+    .rr .v { color:var(--fg); font-family:var(--mono); font-size:12px; text-align:right; }
+    .dbox { background:var(--bg); border:1px solid var(--b); border-radius:7px; padding:13px; font-size:12.5px; color:var(--fg2); line-height:1.65; white-space:pre-wrap; margin-top:11px; }
+    .cites { list-style:none; margin-top:11px; }
+    .cites li { font-size:11.5px; color:var(--fg4); padding:6px 0; border-bottom:1px solid var(--b); font-family:var(--mono); }
     .cites li:last-child { border-bottom:none; }
+    .review { font-size:11.5px; color:var(--amb); margin-top:11px; display:flex; align-items:center; gap:7px; }
+    .review::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--amb); }
 
-    .ecard { border:1px solid var(--b); border-radius:8px; background:var(--s2); padding:14px; margin-bottom:10px; }
-    .esubj { font-size:13px; font-weight:600; color:var(--text); }
-    .emeta { font-family:var(--mono); font-size:10px; color:var(--dim); margin-top:4px; }
-    .ebody { font-family:var(--mono); font-size:11.5px; color:var(--sub); margin-top:10px; padding-top:10px; border-top:1px solid var(--b); line-height:1.7; }
-    .eapproval { font-family:var(--mono); font-size:10px; color:var(--org); margin-top:8px; }
+    .ecard { border:1px solid var(--b); border-radius:8px; padding:14px; margin-bottom:10px; }
+    .esubj { font-size:13px; font-weight:500; color:var(--fg); }
+    .emeta { font-size:11px; color:var(--fg4); margin-top:5px; display:flex; align-items:center; gap:9px; }
+    .ebody { font-size:12.5px; color:var(--fg2); margin-top:11px; padding-top:11px; border-top:1px solid var(--b); line-height:1.65; }
 
-    footer {
-      text-align:center; font-family:var(--mono); font-size:10px;
-      letter-spacing:.08em; color:var(--dim);
-      padding:28px 0 20px; border-top:1px solid var(--b); margin-top:20px;
-    }
-    footer a { color:var(--cyan); text-decoration:none; }
+    footer { border-top:1px solid var(--b); margin-top:28px; }
+    .foot-in { max-width:1200px; margin:0 auto; padding:22px 28px; font-size:12px; color:var(--fg4); display:flex; gap:18px; flex-wrap:wrap; }
+    footer a { color:var(--fg3); text-decoration:none; }
+    footer a:hover { color:var(--fg); }
 
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:0s !important; transition-duration:0s !important; } }
   </style>
@@ -397,24 +281,19 @@
 <body>
 
 <div class="hdr">
-  <div class="hdr-inner">
-    <a class="logo-wrap" href="/">
-      <div class="logo-mark"><span>BDI</span></div>
-      <div class="logo-text-wrap">
-        <div class="logo-name">Bharat Doc Intelligence</div>
-        <div class="logo-tag">OpenAI Agents SDK · Responses API</div>
-      </div>
+  <div class="hdr-in">
+    <a class="brand" href="/">
+      <div class="mark">B</div>
+      <span class="brand-t">Bharat Doc Intelligence</span>
     </a>
-
-    <nav class="tabs">
-      <button class="tab on" data-t="analyze">Document analysis</button>
+    <nav>
+      <button class="tab on" data-t="analyze">Analysis</button>
       <button class="tab"    data-t="recon">Reconciliation</button>
-      <button class="tab"    data-t="workflow">Workflow tools</button>
+      <button class="tab"    data-t="workflow">Workflow</button>
     </nav>
-
-    <div id="mbadge" class="mbadge">
-      <span class="pip"></span>
-      <span id="mtext">connecting…</span>
+    <div id="status" class="status">
+      <span class="dot"></span><span id="status-t">connecting</span>
+      <span class="mono" id="status-m"></span>
     </div>
   </div>
 </div>
@@ -424,67 +303,67 @@
 
 <!-- ── ANALYZE ── -->
 <div class="pane on" id="pane-analyze">
-  <div class="two-col">
+  <div class="intro">
+    <h1>Document analysis</h1>
+    <p>Extract structured data from an Indian GST invoice or receipt, then run the deterministic audit — GSTIN checksum, line-item arithmetic, and tax-head consistency.</p>
+  </div>
 
+  <div class="cols">
     <div class="card">
-      <div class="card-head"><span class="card-title">01 · Submit document</span></div>
-      <div class="card-body">
+      <div class="ch"><span class="ct">Submit</span></div>
+      <div class="cb">
         <label class="lbl">Invoice or receipt image</label>
-        <div class="dropzone" id="dz">
-          <div class="dz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 20h16"/>
-            </svg>
+        <div class="drop" id="dz">
+          <div class="drop-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0L8 8m4-4 4 4"/><path d="M5 20h14"/></svg>
           </div>
-          <div class="dz-primary">Drop image or click to browse</div>
-          <div class="dz-sub">PNG · JPG · WEBP — incl. हिन्दी / தமிழ் / বাংলা</div>
+          <div class="drop-1">Drop image or click to browse</div>
+          <div class="drop-2">PNG · JPG · WEBP — incl. हिन्दी / தமிழ் / বাংলা</div>
           <input id="fi" type="file" accept="image/*">
         </div>
-        <div id="prev-wrap">
-          <img id="prev-img" alt="preview">
-          <div id="prev-row"><span id="prev-name"></span><span id="prev-del">remove ✕</span></div>
-        </div>
+        <div id="prev"><img id="prev-img" alt="preview"><div class="row"><span id="prev-name"></span><span class="x" id="prev-x">remove</span></div></div>
 
-        <div class="divline">or paste text</div>
+        <div class="div">or paste text</div>
 
         <label class="lbl">OCR text or mode hint</label>
-        <textarea id="ta" placeholder='Paste invoice text… or type "dirty" to demo anomaly detection, "hindi" for regional-language fixture.'></textarea>
+        <textarea id="ta" placeholder='Paste invoice text — type "dirty" for an anomaly demo, "hindi" for a regional-language fixture.'></textarea>
 
-        <button class="btn-p" id="btn-run"><span class="spin"></span><span id="btn-lbl">Analyze document</span></button>
-        <div class="hint" id="run-hint"></div>
+        <button class="btn btn-primary block" id="run"><span class="spin"></span><span id="run-l">Analyze</span></button>
+        <div class="hint" id="run-h"></div>
       </div>
     </div>
 
     <div class="card" id="report-card">
-      <div class="card-head">
-        <span class="card-title">02 · Audit report</span>
-        <span id="rmode" style="font-family:var(--mono);font-size:9.5px;color:var(--dim);"></span>
-      </div>
+      <div class="ch"><span class="ct">Audit report</span><span class="ct" id="rmode" style="letter-spacing:0;text-transform:none;font-family:var(--mono);font-weight:400;"></span></div>
       <div id="report">
         <div class="empty">
-          <div class="etag">awaiting document</div>
-          <p>Submit an invoice or receipt to extract its fields and run the deterministic GST audit.</p>
+          <div class="t">No document yet</div>
+          <p>Submit an invoice to see the extraction and the deterministic GST audit.</p>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- ── RECONCILIATION ── -->
 <div class="pane" id="pane-recon">
+  <div class="intro">
+    <h1>GSTR-2B reconciliation</h1>
+    <p>Match the purchase register against GSTR-2B to derive IMS actions and per-invoice ITC verdicts — claim, defer, or block.</p>
+  </div>
+
   <div class="card">
-    <div class="card-head">
-      <span class="card-title">GSTR-2B ↔ Purchase register</span>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn-g" id="btn-recon"><span class="spin"></span><span id="recon-lbl">Load sample — Apr 2026</span></button>
-        <span id="recon-period" style="font-family:var(--mono);font-size:9.5px;color:var(--dim);"></span>
+    <div class="ch">
+      <span class="ct">Purchase register ↔ GSTR-2B</span>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <span id="rperiod" style="font-size:11px;color:var(--fg4);font-family:var(--mono);"></span>
+        <button class="btn btn-sec" id="rload"><span class="spin"></span><span id="rload-l">Load sample (Apr 2026)</span></button>
       </div>
     </div>
-    <div id="recon-body">
+    <div id="recon">
       <div class="empty">
-        <div class="etag">no data</div>
-        <p>Load the sample period to see IMS actions, ITC verdicts, and matched/missing invoices.</p>
+        <div class="t">No data loaded</div>
+        <p>Load the sample period to see matched, missing, and mismatched invoices with ITC verdicts.</p>
       </div>
     </div>
   </div>
@@ -492,387 +371,313 @@
 
 <!-- ── WORKFLOW ── -->
 <div class="pane" id="pane-workflow">
-  <div class="wgrid">
-
-    <!-- pre-file check -->
-    <div class="card">
-      <div class="card-head"><span class="card-title">Rule 88C pre-file check</span></div>
-      <div class="card-body">
-        <p style="font-size:12.5px;color:var(--sub);margin-bottom:14px;">Compare GSTR-1 vs GSTR-3B before filing to catch mismatches that auto-trigger DRC-01B.</p>
-        <label class="lbl">Period (YYYY-MM)</label>
-        <input id="pf-period" type="text" value="2026-04" style="margin-bottom:12px;">
-        <div class="grid2">
-          <div><label class="lbl">GSTR-1 taxable value</label><input type="number" id="g1tx" value="1000000" step="0.01"></div>
-          <div><label class="lbl">GSTR-1 tax</label><input type="number" id="g1tax" value="180000" step="0.01"></div>
-          <div style="margin-top:8px;"><label class="lbl">GSTR-3B taxable value</label><input type="number" id="g3tx" value="900000" step="0.01"></div>
-          <div style="margin-top:8px;"><label class="lbl">GSTR-3B tax</label><input type="number" id="g3tax" value="70000" step="0.01"></div>
-        </div>
-        <button class="btn-p" id="btn-pf" style="font-size:13px;padding:10px 14px;"><span class="spin"></span>Run check</button>
-        <div class="rbox" id="pf-result"></div>
-      </div>
-    </div>
-
-    <!-- notice triage -->
-    <div class="card">
-      <div class="card-head"><span class="card-title">Notice triage & reply draft</span></div>
-      <div class="card-body">
-        <p style="font-size:12.5px;color:var(--sub);margin-bottom:14px;">Paste a GST notice (DRC-01, ASMT-10) to classify it, assess risk, and generate a draft reply with CGST citations for CA review.</p>
-        <label class="lbl">Notice text</label>
-        <textarea id="notice-ta" style="min-height:108px;" placeholder="DRC-01C: Excess ITC claimed in GSTR-3B per Rule 88D…"></textarea>
-        <button class="btn-p" id="btn-notice" style="font-size:13px;padding:10px 14px;"><span class="spin"></span>Triage notice</button>
-        <div class="rbox" id="notice-result"></div>
-      </div>
-    </div>
-
+  <div class="intro">
+    <h1>Compliance workflow</h1>
+    <p>Deterministic, human-reviewed helpers from the research roadmap. Nothing is auto-filed or auto-sent.</p>
   </div>
 
-  <!-- follow-ups + batch — full width -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
-
+  <div class="wgrid">
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Vendor follow-up drafts</span>
-        <span style="font-family:var(--mono);font-size:9.5px;color:var(--dim);">approval-gated</span>
-      </div>
-      <div class="card-body">
-        <p style="font-size:12.5px;color:var(--sub);margin-bottom:14px;">Draft supplier emails for invoices in the purchase register that are missing from GSTR-2B.</p>
-        <button class="btn-g" id="btn-fu"><span class="spin"></span>Load from reconciliation sample</button>
-        <div id="fu-result" style="margin-top:14px;"></div>
+      <div class="ch"><span class="ct">Rule 88C pre-file check</span></div>
+      <div class="cb">
+        <p class="wdesc">Compare GSTR-1 and GSTR-3B before filing to catch mismatches that auto-trigger a DRC-01B notice.</p>
+        <label class="lbl">Period</label>
+        <input type="text" id="pf-p" value="2026-04" style="margin-bottom:12px;">
+        <div class="g2">
+          <div><label class="lbl">GSTR-1 taxable</label><input type="number" id="g1tx" value="1000000" step="0.01"></div>
+          <div><label class="lbl">GSTR-1 tax</label><input type="number" id="g1t" value="180000" step="0.01"></div>
+          <div style="margin-top:10px;"><label class="lbl">GSTR-3B taxable</label><input type="number" id="g3tx" value="900000" step="0.01"></div>
+          <div style="margin-top:10px;"><label class="lbl">GSTR-3B tax</label><input type="number" id="g3t" value="70000" step="0.01"></div>
+        </div>
+        <button class="btn btn-primary block" id="pf"><span class="spin"></span>Run check</button>
+        <div class="rbox" id="pf-r"></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Batch analysis</span>
-        <span style="font-family:var(--mono);font-size:9.5px;color:var(--dim);">up to 25 texts</span>
+      <div class="ch"><span class="ct">Notice triage &amp; reply</span></div>
+      <div class="cb">
+        <p class="wdesc">Classify a GST notice, assess risk, and draft a reply with CGST citations for CA review.</p>
+        <label class="lbl">Notice text</label>
+        <textarea id="nt" style="min-height:104px;font-family:var(--sans);font-size:13px;" placeholder="DRC-01C: Excess ITC claimed in GSTR-3B per Rule 88D…"></textarea>
+        <button class="btn btn-primary block" id="nb"><span class="spin"></span>Triage notice</button>
+        <div class="rbox" id="nt-r"></div>
       </div>
-      <div class="card-body">
-        <p style="font-size:12.5px;color:var(--sub);margin-bottom:14px;">Run the extraction + audit pipeline across multiple invoice texts in one call.</p>
-        <button class="btn-g" id="btn-batch"><span class="spin"></span>Run sample batch (3 texts)</button>
-        <div class="rbox" id="batch-result"></div>
+    </div>
+  </div>
+
+  <div class="wgrid" style="margin-top:14px;">
+    <div class="card">
+      <div class="ch"><span class="ct">Vendor follow-ups</span><span class="ct" style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--fg4);">approval-gated</span></div>
+      <div class="cb">
+        <p class="wdesc">Draft supplier emails for invoices present in the purchase register but missing from GSTR-2B.</p>
+        <button class="btn btn-sec" id="fb"><span class="spin"></span>Load from reconciliation sample</button>
+        <div id="fb-r" style="margin-top:14px;"></div>
       </div>
     </div>
 
+    <div class="card">
+      <div class="ch"><span class="ct">Batch analysis</span><span class="ct" style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--fg4);">up to 25</span></div>
+      <div class="cb">
+        <p class="wdesc">Run the extraction and audit pipeline across multiple invoice texts in one call.</p>
+        <button class="btn btn-sec" id="bb"><span class="spin"></span>Run sample batch</button>
+        <div class="rbox" id="bb-r"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-</div><!-- /wrap -->
+</div>
 </main>
 
 <footer>
-  <div class="wrap">
-    <b style="color:var(--org)">Mock</b> mode — no key needed · or <b style="color:var(--grn)">live</b> mode with OPENAI_API_KEY ·
-    <a href="https://openai-ai-deployment-portfolio.onrender.com">live demo</a> ·
-    <a href="https://github.com/sciencenerd-des/openai-ai-deployment-portfolio">source</a> ·
-    <a href="docs/TUTORIAL.md">tutorial</a>
+  <div class="foot-in">
+    <span id="foot-mode">Mock mode — no key required.</span>
+    <a href="https://openai-ai-deployment-portfolio.onrender.com">Live demo</a>
+    <a href="https://github.com/sciencenerd-des/openai-ai-deployment-portfolio">Source</a>
+    <a href="docs/TUTORIAL.md">Tutorial</a>
   </div>
 </footer>
 
 <script>
 "use strict";
-
-/* ── utils ── */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
-const fmtR = n => n == null ? '—' : '₹ ' + fmt(n);
-const busy = (btn, lbl) => { btn.classList.add('loading'); btn.disabled = true; if (lbl) lbl.textContent = lbl._orig + '…'; };
-const done = (btn, lbl) => { btn.classList.remove('loading'); btn.disabled = false; if (lbl) lbl.textContent = lbl._orig; };
-document.querySelectorAll('[id$="-lbl"]').forEach(el => el._orig = el.textContent);
+const inr = n => n == null ? '—' : '₹' + fmt(n);
 
-async function api(url, opts, fallback) {
+async function api(url, opts, fb) {
   try { const r = await fetch(url, opts); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
-  catch (e) { return typeof fallback === 'function' ? fallback(e) : fallback; }
+  catch (e) { return typeof fb === 'function' ? fb(e) : fb; }
 }
+function load(btn) { btn.classList.add('loading'); btn.disabled = true; }
+function unload(btn) { btn.classList.remove('loading'); btn.disabled = false; }
 
-/* ── static mock fallbacks (used if server unreachable) ── */
-const MK = {
-  clean: {
-    document_type:'tax_invoice', invoice_number:'INV-2024-0042', invoice_date:'2024-11-18',
-    supplier_name:'Saraswati Traders', supplier_gstin:'27AAPFU0939F1ZV',
-    buyer_name:'Bharat Kirana Store', buyer_gstin:'27AACCM1234C1Z2',
-    place_of_supply:'Maharashtra (27)', currency:'INR', detected_language:'en',
-    line_items:[
-      {description:'Basmati Rice 25kg', hsn_sac:'1006', quantity:4, unit_price:1450, amount:5800},
-      {description:'Sunflower Oil 15L',  hsn_sac:'1512', quantity:3, unit_price:1980, amount:5940}
-    ],
-    subtotal:11740, total_tax:587, grand_total:12327,
-    tax_breakup:{taxable_value:11740, cgst:293.5, sgst:293.5, igst:0}
-  }
-};
-const dirty = t => String(t || '').toLowerCase().includes('dirty');
+/* mock fallbacks */
+const CLEAN = { document_type:'tax_invoice', invoice_number:'INV-2024-0042', invoice_date:'2024-11-18', supplier_name:'Saraswati Traders', supplier_gstin:'27AAPFU0939F1ZV', buyer_name:'Bharat Kirana Store', buyer_gstin:'27AACCM1234C1Z2', place_of_supply:'Maharashtra (27)', currency:'INR', detected_language:'en', line_items:[{description:'Basmati Rice 25kg', hsn_sac:'1006', quantity:4, unit_price:1450, amount:5800},{description:'Sunflower Oil 15L', hsn_sac:'1512', quantity:3, unit_price:1980, amount:5940}], subtotal:11740, total_tax:587, grand_total:12327, tax_breakup:{taxable_value:11740, cgst:293.5, sgst:293.5, igst:0} };
+const isDirty = t => String(t||'').toLowerCase().includes('dirty');
 function mockReport(t) {
-  const ex = dirty(t) ? {...MK.clean, invoice_number:'9921', supplier_name:'Krishna Mobile House', supplier_gstin:'29AAAAA0000A1Z9', buyer_name:null, buyer_gstin:null, line_items:[{description:'USB-C Cable', hsn_sac:'8544', quantity:2, unit_price:299, amount:698}], subtotal:598, total_tax:107.64, grand_total:820, tax_breakup:{taxable_value:598, cgst:53.82, sgst:53.82, igst:20}} : MK.clean;
-  const an = dirty(t) ? [
+  const ex = isDirty(t) ? {...CLEAN, invoice_number:'9921', supplier_name:'Krishna Mobile House', supplier_gstin:'29AAAAA0000A1Z9', buyer_name:null, buyer_gstin:null, line_items:[{description:'USB-C Cable', hsn_sac:'8544', quantity:2, unit_price:299, amount:698}], subtotal:598, total_tax:107.64, grand_total:820, tax_breakup:{taxable_value:598, cgst:53.82, sgst:53.82, igst:20}} : CLEAN;
+  const an = isDirty(t) ? [
     {code:'gstin_invalid', severity:'error', message:"supplier_gstin '29AAAAA0000A1Z9' is invalid: checksum mismatch.", field:'supplier_gstin'},
     {code:'line_amount_mismatch', severity:'warning', message:"Line 1 'USB-C Cable': 2 × 299 = 598, but amount is 698.", field:'line_items[0]'},
     {code:'grand_total_mismatch', severity:'error', message:'subtotal 598 + tax 107.64 = 705.64, but grand total is 820.', field:'grand_total'},
     {code:'mixed_tax_heads', severity:'error', message:'Both IGST and CGST/SGST present; a supply is inter- or intra-state.', field:'tax_breakup'}
   ] : [];
-  return {mode:'mock', extracted:ex, anomalies:an, confidence: dirty(t) ? 0 : 1};
+  return {mode:'mock', extracted:ex, anomalies:an, confidence:isDirty(t)?0:1};
 }
 function mockRecon() {
   return {period:'2026-04', summary:{total:6, claimable_itc:1487, deferred_itc:180, blocked_itc:2610, matched:2, in_register_not_2b:1}, matches:[
-    {status:'matched', ims_action:'accept', register_line:{supplier_gstin:'27AAPFU0939F1ZV', invoice_number:'INV-2026-0042', invoice_date:'2026-04-18', cgst:293.5, sgst:293.5}, gstr2b_line:null, deltas:{}, itc:{verdict:'claim', reasons:['Matched in GSTR-2B within tolerance.']}},
-    {status:'value_mismatch_rounding', ims_action:'accept', register_line:{supplier_gstin:'29AABCT1332L1ZA', invoice_number:'KA-88', invoice_date:'2026-04-20', igst:900}, gstr2b_line:null, deltas:{total_itc:0.5}, itc:{verdict:'claim', reasons:['Only rounding-level deltas.']}},
-    {status:'value_mismatch_material', ims_action:'reject', register_line:{supplier_gstin:'07AAACG2115R1ZJ', invoice_number:'DEL-12', invoice_date:'2026-04-22', igst:1800}, gstr2b_line:null, deltas:{total_itc:126}, itc:{verdict:'block', reasons:['Material value mismatch exceeds tolerance.']}},
-    {status:'in_register_not_2b', ims_action:'pending', register_line:{supplier_gstin:'08AAACH7409R1Z6', invoice_number:'RJ-19', invoice_date:'2026-04-26', cgst:90, sgst:90}, gstr2b_line:null, deltas:{}, itc:{verdict:'defer', reasons:['Missing from static GSTR-2B.']}},
-    {status:'in_2b_not_register', ims_action:'reject', register_line:null, gstr2b_line:{ctin:'24AAACC1206D1ZM', invoice_number:'GJ-204', invoice_date:'2026-04-25', igst:396}, deltas:{}, itc:{verdict:'block', reasons:['Not in purchase register.']}},
-    {status:'matched', ims_action:'accept', register_line:{supplier_gstin:'33AAAAA0000A1Z9', invoice_number:'FOOD-7', invoice_date:'2026-04-24', cgst:270, sgst:270}, gstr2b_line:null, deltas:{}, itc:{verdict:'block', reasons:['S.17(5) blocked: food.']}}
+    {status:'matched', ims_action:'accept', register_line:{supplier_gstin:'27AAPFU0939F1ZV', invoice_number:'INV-2026-0042', invoice_date:'2026-04-18'}, deltas:{}, itc:{verdict:'claim', reasons:['Matched in GSTR-2B within tolerance.']}},
+    {status:'value_mismatch_rounding', ims_action:'accept', register_line:{supplier_gstin:'29AABCT1332L1ZA', invoice_number:'KA-88', invoice_date:'2026-04-20'}, deltas:{total_itc:0.5}, itc:{verdict:'claim', reasons:['Only rounding-level deltas.']}},
+    {status:'value_mismatch_material', ims_action:'reject', register_line:{supplier_gstin:'07AAACG2115R1ZJ', invoice_number:'DEL-12', invoice_date:'2026-04-22'}, deltas:{total_itc:126}, itc:{verdict:'block', reasons:['Material value mismatch exceeds tolerance.']}},
+    {status:'in_register_not_2b', ims_action:'pending', register_line:{supplier_gstin:'08AAACH7409R1Z6', invoice_number:'RJ-19', invoice_date:'2026-04-26'}, deltas:{}, itc:{verdict:'defer', reasons:['Missing from static GSTR-2B.']}},
+    {status:'in_2b_not_register', ims_action:'reject', gstr2b_line:{ctin:'24AAACC1206D1ZM', invoice_number:'GJ-204', invoice_date:'2026-04-25'}, deltas:{}, itc:{verdict:'block', reasons:['Not in purchase register.']}},
+    {status:'matched', ims_action:'accept', register_line:{supplier_gstin:'33AAAAA0000A1Z9', invoice_number:'FOOD-7', invoice_date:'2026-04-24'}, deltas:{}, itc:{verdict:'block', reasons:['S.17(5) blocked: food.']}}
   ]};
 }
 
-/* ── health ── */
+/* health */
 (async () => {
   const h = await api('/api/health', undefined, {mode:'mock', model:'—'});
-  const b = $('mbadge'); b.className = 'mbadge ' + h.mode;
-  $('mtext').textContent = h.mode.toUpperCase() + ' · ' + h.model;
+  const s = $('status'); s.className = 'status ' + h.mode;
+  $('status-t').textContent = h.mode === 'live' ? 'Live' : 'Mock';
+  $('status-m').textContent = h.model;
+  $('foot-mode').textContent = h.mode === 'live' ? 'Live mode · ' + h.model : 'Mock mode — no key required.';
 })();
 
-/* ── tabs ── */
+/* tabs */
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
   document.querySelectorAll('.pane').forEach(x => x.classList.remove('on'));
-  t.classList.add('on');
-  $('pane-' + t.dataset.t).classList.add('on');
+  t.classList.add('on'); $('pane-' + t.dataset.t).classList.add('on');
 }));
 
-/* ── drop zone ── */
+/* drop */
 const dz = $('dz'), fi = $('fi');
 dz.addEventListener('click', () => fi.click());
 ['dragover','dragenter'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.add('drag'); }));
 ['dragleave','dragend'].forEach(e => dz.addEventListener(e, () => dz.classList.remove('drag')));
-dz.addEventListener('drop', ev => { ev.preventDefault(); dz.classList.remove('drag'); if (ev.dataTransfer.files[0]) { fi.files = ev.dataTransfer.files; preview(ev.dataTransfer.files[0]); } });
-fi.addEventListener('change', () => fi.files[0] && preview(fi.files[0]));
-$('prev-del').addEventListener('click', e => { e.stopPropagation(); fi.value = ''; $('prev-wrap').style.display = 'none'; dz.style.display = ''; });
-function preview(f) {
-  const r = new FileReader();
-  r.onload = () => { $('prev-img').src = r.result; $('prev-name').textContent = f.name; $('prev-wrap').style.display = 'block'; dz.style.display = 'none'; };
-  r.readAsDataURL(f);
-}
+dz.addEventListener('drop', ev => { ev.preventDefault(); dz.classList.remove('drag'); if (ev.dataTransfer.files[0]) { fi.files = ev.dataTransfer.files; prev(ev.dataTransfer.files[0]); } });
+fi.addEventListener('change', () => fi.files[0] && prev(fi.files[0]));
+$('prev-x').addEventListener('click', e => { e.stopPropagation(); fi.value=''; $('prev').style.display='none'; dz.style.display=''; });
+function prev(f) { const r = new FileReader(); r.onload = () => { $('prev-img').src = r.result; $('prev-name').textContent = f.name; $('prev').style.display='block'; dz.style.display='none'; }; r.readAsDataURL(f); }
 
-/* ── render analysis ── */
-function meterColor(c) { return c > .8 ? 'var(--grn)' : c > .5 ? 'var(--org)' : 'var(--red)'; }
-
-function renderAnalysis(rep) {
+/* analysis render */
+function renderReport(rep) {
   const ex = rep.extracted, an = rep.anomalies || [];
   const clean = !an.some(a => a.severity === 'error');
   const badF = new Set(an.filter(a => a.code === 'gstin_invalid').map(a => a.field));
   const tb = ex.tax_breakup || {};
-  const taxParts = [];
-  if (tb.cgst) taxParts.push('CGST ' + fmt(tb.cgst));
-  if (tb.sgst) taxParts.push('SGST ' + fmt(tb.sgst));
-  if (tb.igst) taxParts.push('IGST ' + fmt(tb.igst));
-  const items = (ex.line_items || []).map(it =>
-    `<tr><td>${esc(it.description)}</td><td>${esc(it.hsn_sac||'—')}</td><td class="r">${esc(it.quantity)}</td><td class="r">${fmtR(it.unit_price)}</td><td class="r">${fmtR(it.amount)}</td></tr>`
-  ).join('');
+  const tx = [];
+  if (tb.cgst) tx.push('CGST ' + fmt(tb.cgst));
+  if (tb.sgst) tx.push('SGST ' + fmt(tb.sgst));
+  if (tb.igst) tx.push('IGST ' + fmt(tb.igst));
+  const items = (ex.line_items||[]).map(it => `<tr><td>${esc(it.description)}</td><td class="mono">${esc(it.hsn_sac||'—')}</td><td class="r mono">${esc(it.quantity)}</td><td class="r mono">${inr(it.unit_price)}</td><td class="r mono">${inr(it.amount)}</td></tr>`).join('');
 
   $('rmode').textContent = rep.mode;
   $('report').innerHTML = `
     <div class="vbar">
-      <div class="vchip ${clean?'ok':'bad'}">${clean?'Validated':'Flagged'}</div>
+      <div class="verdict ${clean?'ok':'bad'}"><span class="d"></span>${clean?'Validated':'Flagged'}</div>
       <div class="conf">
         <div class="conf-top"><span>Confidence</span><b>${Math.round(rep.confidence*100)}%</b></div>
-        <div class="cbar"><div class="cfill" id="cfill"></div></div>
-        <div class="conf-sub"><span>${an.length} anomal${an.length===1?'y':'ies'}</span>·<span>${ex.document_type?.replace(/_/g,' ')||'—'}</span>·<span>${ex.detected_language||'—'}</span></div>
+        <div class="cbar"><div class="cfill" id="cf"></div></div>
+        <div class="conf-sub"><span>${an.length} anomal${an.length===1?'y':'ies'}</span><span>${ex.document_type?.replace(/_/g,' ')||'—'}</span><span>${ex.detected_language||'—'}</span></div>
       </div>
     </div>
-    <div class="card-body">
+    <div class="cb">
       <div class="sec">Audit notes</div>
-      ${an.length ? an.map(a=>`<div class="note ${a.severity}"><span class="nsev">${a.severity}</span><span>${esc(a.message)}<code>${esc(a.code)}</code></span></div>`).join('')
-        : '<div class="note ok"><span class="nsev">clean</span><span>GSTINs, line maths, and tax heads all reconcile.</span></div>'}
+      ${an.length ? an.map(a=>`<div class="note ${a.severity}"><span class="nd"></span><span class="nsev">${a.severity}</span><span>${esc(a.message)} <code>${esc(a.code)}</code></span></div>`).join('')
+        : `<div class="note ok"><span class="nd"></span><span class="nsev">clean</span><span>GSTINs, line maths, and tax heads all reconcile.</span></div>`}
+
       <div class="sec">Parties</div>
       <div class="kv">
-        <div class="kvc"><div class="kk">Supplier</div><div class="kv-">${esc(ex.supplier_name||'—')}</div></div>
-        <div class="kvc"><div class="kk">Buyer</div><div class="kv-">${esc(ex.buyer_name||'—')}</div></div>
-        <div class="kvc"><div class="kk">Supplier GSTIN</div><div class="kv- ${badF.has('supplier_gstin')?'bad':''}">${esc(ex.supplier_gstin||'—')}</div></div>
-        <div class="kvc"><div class="kk">Buyer GSTIN</div><div class="kv- ${badF.has('buyer_gstin')?'bad':''}">${esc(ex.buyer_gstin||'—')}</div></div>
-        <div class="kvc"><div class="kk">Invoice №</div><div class="kv-">${esc(ex.invoice_number||'—')}</div></div>
-        <div class="kvc"><div class="kk">Date</div><div class="kv-">${esc(ex.invoice_date||'—')}</div></div>
-        <div class="kvc"><div class="kk">Place of supply</div><div class="kv-">${esc(ex.place_of_supply||'—')}</div></div>
-        <div class="kvc"><div class="kk">Language</div><div class="kv-">${esc(ex.detected_language||'—')}</div></div>
+        <div class="kvc"><div class="kk">Supplier</div><div class="kvv">${esc(ex.supplier_name||'—')}</div></div>
+        <div class="kvc"><div class="kk">Buyer</div><div class="kvv">${esc(ex.buyer_name||'—')}</div></div>
+        <div class="kvc"><div class="kk">Supplier GSTIN</div><div class="kvv mono ${badF.has('supplier_gstin')?'bad':''}">${esc(ex.supplier_gstin||'—')}</div></div>
+        <div class="kvc"><div class="kk">Buyer GSTIN</div><div class="kvv mono ${badF.has('buyer_gstin')?'bad':''}">${esc(ex.buyer_gstin||'—')}</div></div>
+        <div class="kvc"><div class="kk">Invoice no.</div><div class="kvv mono">${esc(ex.invoice_number||'—')}</div></div>
+        <div class="kvc"><div class="kk">Date</div><div class="kvv mono">${esc(ex.invoice_date||'—')}</div></div>
+        <div class="kvc"><div class="kk">Place of supply</div><div class="kvv">${esc(ex.place_of_supply||'—')}</div></div>
+        <div class="kvc"><div class="kk">Language</div><div class="kvv">${esc(ex.detected_language||'—')}</div></div>
       </div>
-      ${items ? `<div class="sec">Line items</div>
-      <table class="tbl"><thead><tr><th>Description</th><th>HSN/SAC</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
-      <tbody>${items}</tbody></table>` : ''}
-      <div class="totals">
-        <div class="trow"><span>Subtotal</span><span>${fmtR(ex.subtotal)}</span></div>
-        <div class="trow"><span>Tax <span style="color:var(--dim);font-size:10px;">${taxParts.join(' · ')}</span></span><span>${fmtR(ex.total_tax)}</span></div>
-        <div class="trow grand"><span>Grand total</span><span>${fmtR(ex.grand_total)}</span></div>
-      </div>
-      <details class="raw"><summary>Raw extraction JSON</summary><pre>${esc(JSON.stringify(ex,null,2))}</pre></details>
-    </div>`;
 
-  requestAnimationFrame(() => {
-    const cf = $('cfill');
-    if (cf) { cf.style.background = meterColor(rep.confidence); cf.style.width = Math.max(4, rep.confidence*100) + '%'; }
-  });
+      ${items ? `<div class="sec">Line items</div><div class="tw"><table class="tbl"><thead><tr><th>Description</th><th>HSN/SAC</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead><tbody>${items}</tbody></table></div>` : ''}
+    </div>
+    <div class="totals">
+      <div class="trow"><span>Subtotal</span><span>${inr(ex.subtotal)}</span></div>
+      <div class="trow"><span>Tax${tx.length?' · '+tx.join('  '):''}</span><span>${inr(ex.total_tax)}</span></div>
+      <div class="trow grand"><span>Grand total</span><span>${inr(ex.grand_total)}</span></div>
+    </div>
+    <details class="raw"><summary>Raw extraction</summary><pre>${esc(JSON.stringify(ex,null,2))}</pre></details>`;
+  requestAnimationFrame(() => { const cf = $('cf'); if (cf) cf.style.width = Math.max(4, rep.confidence*100) + '%'; });
 }
 
-/* ── analyze ── */
-const btnRun = $('btn-run'), btnLbl = $('btn-lbl');
-btnRun.addEventListener('click', async () => {
-  busy(btnRun, btnLbl); $('run-hint').textContent = 'Reading document…';
+$('run').addEventListener('click', async () => {
+  const b = $('run'); load(b); $('run-l').textContent = 'Analyzing'; $('run-h').textContent = 'Reading document…';
   try {
     const fd = new FormData();
     if (fi.files[0]) fd.append('file', fi.files[0]);
     if ($('ta').value) fd.append('text', $('ta').value);
-    renderAnalysis(await api('/api/analyze', {method:'POST', body:fd}, () => mockReport($('ta').value)));
-    $('run-hint').textContent = 'Done.';
-  } catch (e) { $('run-hint').textContent = 'Error: ' + e.message; }
-  finally { done(btnRun, btnLbl); }
+    renderReport(await api('/api/analyze', {method:'POST', body:fd}, () => mockReport($('ta').value)));
+    $('run-h').textContent = 'Done.';
+  } catch (e) { $('run-h').textContent = 'Error: ' + e.message; }
+  finally { unload(b); $('run-l').textContent = 'Analyze'; }
 });
 
-/* ── reconciliation ── */
-function rowAccent(st) {
-  return {matched:'lgrn', value_mismatch_rounding:'ldim', value_mismatch_material:'lred', in_register_not_2b:'lorg', in_2b_not_register:'lcyn'}[st] || '';
-}
-function chipClass(st) {
-  return {matched:'matched', value_mismatch_rounding:'rounding', value_mismatch_material:'material', in_register_not_2b:'missing-2b', in_2b_not_register:'missing-reg'}[st] || 'none';
-}
-
+/* recon render — status as dot + text, verdict as colored text */
+const STMAP = { matched:['g','Matched'], value_mismatch_rounding:['m','Rounding'], value_mismatch_material:['r','Material mismatch'], in_register_not_2b:['a','Missing in 2B'], in_2b_not_register:['r','Missing in register'] };
+const VMAP = { claim:'g', defer:'a', block:'r' };
 function renderRecon(rep) {
   const s = rep.summary || {};
-  $('recon-period').textContent = 'Period: ' + rep.period;
+  $('rperiod').textContent = rep.period;
   const rows = (rep.matches||[]).map(m => {
     const line = m.register_line || m.gstr2b_line || {};
     const gstin = line.supplier_gstin || line.ctin || '—';
+    const [sc, sl] = STMAP[m.status] || ['m', m.status];
     const itc = m.itc || {};
-    const delta = m.deltas?.total_itc;
-    return `<tr class="${rowAccent(m.status)}">
-      <td><span class="chip ${chipClass(m.status)}">${m.status.replace(/_/g,' ')}</span></td>
-      <td>${esc(line.invoice_number||'—')}<div class="rmeta">${esc(line.invoice_date||'')}</div></td>
-      <td style="font-size:10.5px;">${esc(gstin.length>16?gstin.slice(0,15)+'…':gstin)}</td>
-      <td class="r">${delta ? `<span class="delta">${fmtR(delta)}</span>` : '—'}</td>
-      <td><span class="chip ${m.ims_action}">${m.ims_action}</span></td>
-      <td><span class="chip ${itc.verdict||'none'}">${itc.verdict||'—'}</span></td>
-      <td style="color:var(--dim);font-size:10.5px;max-width:200px;">${esc((itc.reasons||[])[0]||'')}</td>
+    const vc = VMAP[itc.verdict] || 'm';
+    const d = m.deltas?.total_itc;
+    return `<tr>
+      <td><span class="sd ${sc}"><span class="d"></span>${sl}</span></td>
+      <td class="mono">${esc(line.invoice_number||'—')}<div class="sub">${esc(line.invoice_date||'')}</div></td>
+      <td class="mono" style="font-size:11px;color:var(--fg3);">${esc(gstin)}</td>
+      <td class="r mono">${d ? inr(d) : '—'}</td>
+      <td><span class="sd m">${esc(m.ims_action)}</span></td>
+      <td><span class="sd ${vc}">${itc.verdict||'—'}</span></td>
+      <td style="color:var(--fg3);font-size:12px;">${esc((itc.reasons||[])[0]||'')}</td>
     </tr>`;
   }).join('');
-
-  $('recon-body').innerHTML = `
+  $('recon').innerHTML = `
     <div class="rsum">
-      <div class="rcell"><div class="rlabel">Claimable ITC</div><div class="rval g">${fmtR(s.claimable_itc)}</div></div>
-      <div class="rcell"><div class="rlabel">Deferred ITC</div><div class="rval o">${fmtR(s.deferred_itc)}</div></div>
-      <div class="rcell"><div class="rlabel">Blocked ITC</div><div class="rval r">${fmtR(s.blocked_itc)}</div></div>
-      <div class="rcell"><div class="rlabel">Total invoices</div><div class="rval">${s.total||rep.matches.length}</div></div>
-      <div class="rcell"><div class="rlabel">Matched</div><div class="rval">${s.matched||0}</div></div>
-      <div class="rcell"><div class="rlabel">Missing 2B</div><div class="rval o">${s.in_register_not_2b||0}</div></div>
+      <div class="rcell"><div class="rlab">Claimable ITC</div><div class="rval g">${inr(s.claimable_itc)}</div></div>
+      <div class="rcell"><div class="rlab">Deferred ITC</div><div class="rval a">${inr(s.deferred_itc)}</div></div>
+      <div class="rcell"><div class="rlab">Blocked ITC</div><div class="rval r">${inr(s.blocked_itc)}</div></div>
+      <div class="rcell"><div class="rlab">Invoices</div><div class="rval">${s.total||rep.matches.length}</div></div>
+      <div class="rcell"><div class="rlab">Matched</div><div class="rval">${s.matched||0}</div></div>
+      <div class="rcell"><div class="rlab">Missing 2B</div><div class="rval a">${s.in_register_not_2b||0}</div></div>
     </div>
-    <div class="tbl-wrap">
-    <table class="rtbl">
-      <thead><tr>
-        <th>Status</th><th>Invoice</th><th>Supplier GSTIN</th>
-        <th class="r">ITC delta</th><th>IMS action</th><th>ITC</th><th>Reason</th>
-      </tr></thead>
+    <div class="tw"><table class="tbl">
+      <thead><tr><th>Status</th><th>Invoice</th><th>Supplier GSTIN</th><th class="r">ITC Δ</th><th>IMS</th><th>ITC</th><th>Reason</th></tr></thead>
       <tbody>${rows}</tbody>
-    </table>
-    </div>
-    <div class="card-body" style="border-top:1px solid var(--b);">
-      <details class="raw"><summary>Raw reconciliation JSON</summary><pre>${esc(JSON.stringify(rep,null,2))}</pre></details>
-    </div>`;
+    </table></div>
+    <details class="raw"><summary>Raw reconciliation</summary><pre>${esc(JSON.stringify(rep,null,2))}</pre></details>`;
 }
-
-const btnRecon = $('btn-recon'), reconLbl = $('recon-lbl');
-btnRecon.addEventListener('click', async () => {
-  busy(btnRecon, reconLbl);
+$('rload').addEventListener('click', async () => {
+  const b = $('rload'); load(b); $('rload-l').textContent = 'Loading';
   try { renderRecon(await api('/api/reconcile/sample', undefined, mockRecon())); }
-  catch (e) { $('recon-body').innerHTML = `<div class="card-body"><div class="note error"><span class="nsev">error</span><span>${esc(e.message)}</span></div></div>`; }
-  finally { done(btnRecon, reconLbl); }
+  catch (e) { $('recon').innerHTML = `<div class="cb"><div class="note error"><span class="nd"></span><span>${esc(e.message)}</span></div></div>`; }
+  finally { unload(b); $('rload-l').textContent = 'Reload sample'; }
 });
 
-/* ── pre-file check ── */
-$('btn-pf').addEventListener('click', async () => {
-  const btn = $('btn-pf');
-  busy(btn, null);
+/* pre-file */
+$('pf').addEventListener('click', async () => {
+  const b = $('pf'); load(b);
   try {
-    const d = await api('/api/prefile-check', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({period:$('pf-period').value||'2026-04', gstr1_taxable_value:+$('g1tx').value, gstr1_tax:+$('g1tax').value, gstr3b_taxable_value:+$('g3tx').value, gstr3b_tax:+$('g3tax').value})
-    }, {period:'2026-04', rule_88c_risk:true, taxable_delta:100000, tax_delta:110000, severity:'error', message:'Material tax mismatch may trigger a Rule 88C-style notice.'});
-    const el = $('pf-result');
-    el.innerHTML = `<div class="rinner">
-      <div class="rrow"><span class="rk">Rule 88C risk</span><span class="rv ${d.rule_88c_risk?'err':'ok'}">${d.rule_88c_risk?'⚠ Yes':'✓ Clear'}</span></div>
-      <div class="rrow"><span class="rk">Taxable delta</span><span class="rv ${Math.abs(d.taxable_delta)>0?'warn':'ok'}">${fmtR(d.taxable_delta)}</span></div>
-      <div class="rrow"><span class="rk">Tax delta</span><span class="rv ${Math.abs(d.tax_delta)>0?'warn':'ok'}">${fmtR(d.tax_delta)}</span></div>
-      <div class="rrow"><span class="rk">Severity</span><span class="rv"><span class="chip ${d.severity}">${d.severity}</span></span></div>
-      <div class="rrow" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <span class="rk">Message</span><span class="rv" style="color:var(--sub);font-size:12px;">${esc(d.message)}</span>
-      </div>
-    </div>`;
+    const d = await api('/api/prefile-check', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({period:$('pf-p').value||'2026-04', gstr1_taxable_value:+$('g1tx').value, gstr1_tax:+$('g1t').value, gstr3b_taxable_value:+$('g3tx').value, gstr3b_tax:+$('g3t').value})}, {period:'2026-04', rule_88c_risk:true, taxable_delta:100000, tax_delta:110000, severity:'error', message:'Material tax mismatch may trigger a Rule 88C notice.'});
+    const el = $('pf-r');
+    el.innerHTML = `<div class="rin">
+      <div class="rr"><span class="k">Rule 88C risk</span><span class="v"><span class="sd ${d.rule_88c_risk?'r':'g'}"><span class="d"></span>${d.rule_88c_risk?'Yes':'Clear'}</span></span></div>
+      <div class="rr"><span class="k">Taxable delta</span><span class="v">${inr(d.taxable_delta)}</span></div>
+      <div class="rr"><span class="k">Tax delta</span><span class="v">${inr(d.tax_delta)}</span></div>
+      <div class="rr"><span class="k">Severity</span><span class="v"><span class="sd ${d.severity==='error'?'r':d.severity==='warning'?'a':'g'}">${esc(d.severity)}</span></span></div>
+    </div><div class="dbox">${esc(d.message)}</div>`;
     el.classList.add('show');
   } catch (e) { alert('Error: ' + e.message); }
-  finally { done(btn, null); btn.querySelector('.spin').style.display='none'; }
+  finally { unload(b); }
 });
 
-/* ── notice triage ── */
-$('btn-notice').addEventListener('click', async () => {
-  const btn = $('btn-notice');
-  busy(btn, null);
+/* notice */
+$('nb').addEventListener('click', async () => {
+  const b = $('nb'); load(b);
   try {
-    const d = await api('/api/notices/triage', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({text:$('notice-ta').value||'DRC-01C Rule 88D excess ITC', period:'2026-04'})
-    }, {notice_type:'drc_01c', risk:'high', deadline_days:7, issues:['ITC claimed exceeds GSTR-2B.'], draft_reply:'We acknowledge the notice and are reconciling underlying returns and purchase register.', citations:['CGST Rule 88C/88D'], requires_human_review:true});
-    const el = $('notice-result');
-    el.innerHTML = `<div class="rinner">
-      <div class="rrow"><span class="rk">Notice type</span><span class="rv">${esc(d.notice_type.replace(/_/g,'-').toUpperCase())}</span></div>
-      <div class="rrow"><span class="rk">Risk</span><span class="rv"><span class="chip ${d.risk}">${d.risk}</span></span></div>
-      ${d.deadline_days?`<div class="rrow"><span class="rk">Deadline</span><span class="rv warn">${d.deadline_days} days</span></div>`:''}
-      ${d.issues.length?`<div class="rrow" style="flex-direction:column;align-items:flex-start;gap:4px;"><span class="rk">Issues</span><span class="rv" style="color:var(--sub);font-size:12px;">${d.issues.map(i=>`• ${esc(i)}`).join('<br>')}</span></div>`:''}
+    const d = await api('/api/notices/triage', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text:$('nt').value||'DRC-01C Rule 88D excess ITC', period:'2026-04'})}, {notice_type:'drc_01c', risk:'high', deadline_days:7, issues:['ITC claimed exceeds GSTR-2B.'], draft_reply:'We acknowledge the notice and are reconciling the underlying returns and purchase register.', citations:['CGST Rule 88C/88D'], requires_human_review:true});
+    const el = $('nt-r');
+    el.innerHTML = `<div class="rin">
+      <div class="rr"><span class="k">Notice type</span><span class="v">${esc(d.notice_type.replace(/_/g,'-').toUpperCase())}</span></div>
+      <div class="rr"><span class="k">Risk</span><span class="v"><span class="sd ${d.risk==='high'?'r':d.risk==='medium'?'a':'g'}"><span class="d"></span>${esc(d.risk)}</span></span></div>
+      ${d.deadline_days?`<div class="rr"><span class="k">Deadline</span><span class="v">${d.deadline_days} days</span></div>`:''}
+      ${d.issues.length?`<div class="rr"><span class="k">Issues</span><span class="v" style="text-align:right;color:var(--fg2);">${d.issues.map(esc).join('<br>')}</span></div>`:''}
     </div>
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:12px;">Draft reply</div>
+    <div class="sec" style="margin:14px 0 0;">Draft reply</div>
     <div class="dbox">${esc(d.draft_reply)}</div>
     ${d.citations.length?`<ul class="cites">${d.citations.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:''}
-    ${d.requires_human_review?'<div style="font-family:var(--mono);font-size:10px;color:var(--org);margin-top:10px;">⚠ Requires human review before submission</div>':''}`;
+    ${d.requires_human_review?'<div class="review">Requires human review before submission</div>':''}`;
     el.classList.add('show');
   } catch (e) { alert('Error: ' + e.message); }
-  finally { done(btn, null); btn.querySelector('.spin').style.display='none'; }
+  finally { unload(b); }
 });
 
-/* ── follow-ups ── */
-$('btn-fu').addEventListener('click', async () => {
-  const btn = $('btn-fu');
-  busy(btn, null);
+/* follow-ups */
+$('fb').addEventListener('click', async () => {
+  const b = $('fb'); load(b);
   try {
     const sample = await api('/api/reconcile/sample', undefined, mockRecon());
-    const emails = await api('/api/followups', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(sample)},
-      [{supplier_gstin:'08AAACH7409R1Z6', subject:'Action required: invoice RJ-19 missing from GSTR-2B', body:'Please upload or amend invoice RJ-19 so ITC reflects in GSTR-2B for 2026-04.', severity:'itc_at_risk', invoice_numbers:['RJ-19'], requires_approval:true}]);
-    const el = $('fu-result');
-    if (!emails.length) {
-      el.innerHTML = '<div class="note ok"><span class="nsev">none</span><span>No missing 2B invoices requiring follow-up.</span></div>';
-    } else {
-      el.innerHTML = emails.map(e=>`<div class="ecard">
-        <div class="esubj">${esc(e.subject)}</div>
-        <div class="emeta">To: ${esc(e.supplier_gstin)} · <span class="chip ${e.severity?.replace(/_/g,'-')}">${esc(e.severity?.replace(/_/g,' '))}</span></div>
-        <div class="ebody">${esc(e.body)}</div>
-        ${e.requires_approval?'<div class="eapproval">⚠ Approval required before sending</div>':''}
-      </div>`).join('');
-    }
-  } catch (e) { $('fu-result').textContent = 'Error: ' + e.message; }
-  finally { done(btn, null); btn.querySelector('.spin').style.display='none'; }
+    const emails = await api('/api/followups', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(sample)}, [{supplier_gstin:'08AAACH7409R1Z6', subject:'Action required: invoice RJ-19 missing from GSTR-2B', body:'Please upload or amend invoice RJ-19 so ITC reflects in GSTR-2B for 2026-04.', severity:'itc_at_risk', invoice_numbers:['RJ-19'], requires_approval:true}]);
+    const el = $('fb-r');
+    el.innerHTML = emails.length ? emails.map(e=>`<div class="ecard">
+      <div class="esubj">${esc(e.subject)}</div>
+      <div class="emeta"><span class="mono" style="font-family:var(--mono);">${esc(e.supplier_gstin)}</span><span class="sd a"><span class="d"></span>${esc((e.severity||'').replace(/_/g,' '))}</span></div>
+      <div class="ebody">${esc(e.body)}</div>
+      ${e.requires_approval?'<div class="review">Approval required before sending</div>':''}
+    </div>`).join('') : '<div class="note ok"><span class="nd"></span><span>No missing 2B invoices requiring follow-up.</span></div>';
+  } catch (e) { $('fb-r').textContent = 'Error: ' + e.message; }
+  finally { unload(b); }
 });
 
-/* ── batch ── */
-$('btn-batch').addEventListener('click', async () => {
-  const btn = $('btn-batch');
-  busy(btn, null);
+/* batch */
+$('bb').addEventListener('click', async () => {
+  const b = $('bb'); load(b);
   try {
-    const results = await api('/api/analyze/batch', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({texts:['normal invoice','dirty receipt with anomaly','hindi invoice']})},
-      ['normal invoice','dirty','hindi'].map(t => mockReport(t)));
-    const el = $('batch-result');
-    el.innerHTML = `<div class="rinner">${results.map((r,i)=>{
-      const clean = !(r.anomalies||[]).some(a=>a.severity==='error');
-      const ex = r.extracted||{};
-      return `<div class="rrow" style="flex-wrap:wrap;gap:8px;">
-        <span style="font-family:var(--mono);font-size:10.5px;color:var(--sub);">${i+1}. ${esc(ex.invoice_number||'—')}</span>
-        <span class="chip ${clean?'claim':'block'}">${clean?'clean':'flagged'}</span>
-        <span style="font-family:var(--mono);font-size:10px;color:var(--dim);">${(r.anomalies||[]).length} anomalies · ${esc(ex.detected_language||'?')}</span>
-      </div>`;}).join('')}</div>
-    <details class="raw"><summary>Full batch JSON</summary><pre>${esc(JSON.stringify(results,null,2))}</pre></details>`;
+    const res = await api('/api/analyze/batch', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({texts:['normal invoice','dirty receipt with anomaly','hindi invoice']})}, ['normal','dirty','hindi'].map(mockReport));
+    const el = $('bb-r');
+    el.innerHTML = `<div class="rin">${res.map((r,i)=>{
+      const clean = !(r.anomalies||[]).some(a=>a.severity==='error'); const ex = r.extracted||{};
+      return `<div class="rr"><span class="k mono" style="font-family:var(--mono);">${i+1}. ${esc(ex.invoice_number||'—')}</span><span class="v"><span class="sd ${clean?'g':'r'}"><span class="d"></span>${clean?'clean':'flagged'}</span> · ${(r.anomalies||[]).length} · ${esc(ex.detected_language||'?')}</span></div>`;
+    }).join('')}</div><details class="raw"><summary>Full batch</summary><pre>${esc(JSON.stringify(res,null,2))}</pre></details>`;
     el.classList.add('show');
   } catch (e) { alert('Error: ' + e.message); }
-  finally { done(btn, null); btn.querySelector('.spin').style.display='none'; }
+  finally { unload(b); }
 });
 </script>
 </body>
