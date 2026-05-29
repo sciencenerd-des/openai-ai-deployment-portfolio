@@ -1,8 +1,17 @@
 .DS_Store
 .env
-.env.*
+.env.local
+!.env.example
 node_modules/
 dist/
 build/
 .next/
 *.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/

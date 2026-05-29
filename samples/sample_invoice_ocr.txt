@@ -1,0 +1,16 @@
+Paste this into the UI text box (or pass as `text`) to try the pipeline.
+In mock mode the word "dirty" routes to the anomaly fixture; anything else
+returns the clean invoice. In live mode this text is sent to the model.
+
+--- clean example ---
+TAX INVOICE
+Saraswati Traders  GSTIN: 27AAPFU0939F1ZV
+Invoice INV-2024-0042  Date: 18-11-2024
+Basmati Rice 25kg   HSN 1006   4 x 1450.00 = 5800.00
+Sunflower Oil 15L   HSN 1512   3 x 1980.00 = 5940.00
+Subtotal 11740.00   CGST 293.50  SGST 293.50   Total 12327.00
+
+--- dirty example (type the word "dirty" in mock mode) ---
+Krishna Mobile House  GSTIN: 29AAAAA0000A1Z9
+USB-C Cable  2 x 299.00 = 698.00
+Subtotal 598.00  Total 820.00

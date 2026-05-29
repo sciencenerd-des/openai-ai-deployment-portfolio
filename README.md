@@ -1,62 +1,111 @@
-# AI Deployment Portfolio - Biswajit Mondal
+# Bharat Doc Intelligence
 
-Public portfolio URL: https://github.com/sciencenerd-des/openai-ai-deployment-portfolio
+**Multimodal GST-document understanding for Indian SMBs — built on the OpenAI Agents SDK + Responses API.**
 
-This portfolio summarizes my work across practical AI deployment, agentic workflows, eval-driven development, human-in-the-loop systems, and AI-assisted software engineering.
+[![CI](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml)
+![python](https://img.shields.io/badge/python-3.12-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
 
-I am a non-traditional AI deployment candidate focused on practical LLM systems: multi-agent orchestration, AI-assisted coding workflows, human-in-the-loop pipelines, eval-driven reliability, and India-specific startup use cases. My audit background gives me strong instincts for traceability, failure modes, documentation, insufficient-data handling, review trails, and operational controls.
+Upload a photo of an Indian GST invoice or receipt — including ones printed in
+regional languages — and get back **structured, validated data** with the dodgy
+bits flagged: invalid GSTINs, line-item maths that doesn't add up, CGST/SGST
+that isn't symmetric, IGST mixed with CGST/SGST, and more.
 
-## Target Roles
+> **Design in one line:** the model *reads* the document into a typed schema;
+> deterministic Python *judges* its correctness. You never trust an LLM with
+> arithmetic you actually need to be right.
 
-- OpenAI AI Deployment Engineer, Startups - India
-- OpenAI AI Deployment Engineer, Codex - India/APAC
+```
+┌── photo / OCR text ──┐   ┌─ OpenAI Agents SDK ─┐   ┌──── pure-Python audit ────┐
+│  GST invoice image   │ → │ vision + output_type │ → │ GSTIN checksum, line maths │ → report + confidence
+│  (en / hi / ta / …)  │   │ + validate_gstin tool│   │ CGST=SGST, totals reconcile│
+└──────────────────────┘   └──────────────────────┘   └────────────────────────────┘
+```
 
-## Core Themes
+See [`docs/architecture.md`](docs/architecture.md) for the full diagram and rationale.
 
-- LLM workflow design
-- Multi-agent orchestration
-- Human review and safety gates
-- Evals and reliability
-- Spec-driven coding-agent implementation
-- India-specific startup use cases in EdTech, finance, data operations, and workflow automation
+> 📸 _Add a screenshot/GIF of the running UI here (`web/index.html`) — see TODO in the Roadmap._
 
-## Best-Fit Evidence
+## Quickstart (zero API key, ~30 seconds)
 
-| Role | Primary proof | Why it matters |
-| --- | --- | --- |
-| AI Deployment Engineer, Startups | Data Annotation Agent, Financial Agents, Personal-AI, India EdTech use case note | Shows customer-style workflow design, human review, quality controls, and practical deployment thinking |
-| AI Deployment Engineer, Codex | WalletWatch, Personal-AI, task-manager, AI coding-agent eval work | Shows spec-driven coding-agent workflows, test/review loops, agentic engineering, and software delivery discipline |
+The app ships with a deterministic **mock mode**, so the whole pipeline, UI,
+tests, and evals run with no key and no network.
 
-## Application Materials
+```bash
+pip install -r requirements-dev.txt
+make test        # 13 tests, all offline
+make eval        # anomaly-detection eval: 100% exact-match on the curated set
+make run         # open http://localhost:8000  (type "dirty" in the box to see flags)
+```
 
-- [Startups AI Deployment Case Study](01_startups_ai_deployment_case_study.md)
-- [Codex Workflow Case Study](02_codex_workflow_case_study.md)
-- [Project Index](03_project_index.md)
-- [Resume Bullets](04_resume_bullets.md)
-- [Interview Talking Points](05_interview_talking_points.md)
-- [Cover Letter Drafts](06_cover_letters.md)
-- [Outreach Messages](07_outreach_messages.md)
-- [Seven-Day Application Sprint](08_seven_day_application_sprint.md)
-- [India EdTech Use Case Note](09_india_edtech_use_case_note.md)
-- [Public Post Drafts](10_public_post_drafts.md)
-- [Resume Drafts](11_resume_drafts.md)
-- [Stretch Candidate Note](12_stretch_candidate_note.md)
-- [Application Tracker](13_application_tracker.md)
-- [Submission Checklist](14_submission_checklist.md)
-- [Publish Plan](15_publish_plan.md)
-- [Application Packet](16_application_packet.md)
-- [Live Role Alignment Matrix](17_live_role_alignment_matrix.md)
-- [Startups Resume - Application Ready](18_resume_startups_application_ready.md)
-- [Codex Resume - Application Ready](19_resume_codex_application_ready.md)
-- [Startups Cover Letter - Application Ready](20_cover_letter_startups_application_ready.md)
-- [Codex Cover Letter - Application Ready](21_cover_letter_codex_application_ready.md)
-- [Application Form Answers](22_application_form_answers.md)
-- [Referral And Outreach Ready](23_referral_and_outreach_ready.md)
+## Live mode (real model)
 
-## Positioning
+```bash
+cp .env.example .env      # add your OPENAI_API_KEY
+pip install -r requirements.txt
+make run
+```
 
-My strongest application theme is:
+In live mode the agent reads an uploaded image with `gpt-4o-mini` (vision),
+constrained to the `ExtractedInvoice` schema, and may call the `validate_gstin`
+function tool to self-check GST numbers. One-click deploy via [`render.yaml`](render.yaml)
+or the included [`Dockerfile`](Dockerfile).
 
-> I help turn AI demos into reliable deployed workflows with agents, evals, human review, coding workflows, and audit-grade operational discipline.
+## What it checks (the "audit brain")
 
-I do not position myself as a conventional enterprise solutions engineer. I position myself as a builder with deployment judgment: someone who can turn ambiguous workflows into structured systems, ask the right reliability questions, and help users adopt AI in a way they can trust.
+| Check | Severity | Example |
+|-------|----------|---------|
+| GSTIN format + modulo-36 checksum | error | `29AAAAA0000A1Z9` → checksum mismatch |
+| Tax invoice missing supplier GSTIN | error | — |
+| `quantity × unit_price ≠ line amount` | warning | `2 × 299 = 598`, printed `698` |
+| Line items don't sum to subtotal | warning | — |
+| `subtotal + tax ≠ grand total` | error | — |
+| IGST mixed with CGST/SGST | error | a supply is inter- *or* intra-state |
+| CGST ≠ SGST | warning | the two halves must be equal |
+
+## Eval results
+
+Anomaly detection is scored as a labelled multi-label task; CI fails if
+exact-match accuracy regresses. Latest run ([`evals/results/latest.md`](evals/results/latest.md)):
+
+- cases: **7** · exact-match: **100%** · precision **1.00** · recall **1.00** · F1 **1.00**
+
+```bash
+python -m evals.run_evals
+```
+
+## Project structure
+
+```
+app/
+  main.py        FastAPI: /, /api/health, /api/analyze
+  pipeline.py    extract → validate → score (keeps SDK imports lazy)
+  agent.py       OpenAI Agents SDK: vision input, output_type, function tool
+  schemas.py     Pydantic models (ExtractedInvoice, Anomaly, AnalysisReport)
+  validators.py  GSTIN checksum + arithmetic/anomaly checks (pure, tested)
+  mock.py        deterministic fixtures for offline mode
+web/index.html   single-page UI (Tailwind CDN, no build step)
+evals/           labelled dataset + scoring harness (CI regression gate)
+tests/           pytest, runs fully offline
+docs/            architecture + a build-it-yourself tutorial
+```
+
+## Tech stack
+
+OpenAI **Agents SDK** · **Responses API** (multimodal/vision) · FastAPI · Pydantic v2 · pytest · GitHub Actions · Docker.
+
+## Roadmap
+
+- [ ] Add a UI screenshot + GIF to this README.
+- [ ] Second agent (handoff) that drafts a corrected, GST-compliant invoice.
+- [ ] Stream partial extraction to the UI via Agents SDK streaming events.
+- [ ] Expand the eval set with real regional-language document scans.
+
+## Tutorial
+
+A full walkthrough of how this is built — and how to build your own structured
+multimodal agent — is in [`docs/TUTORIAL.md`](docs/TUTORIAL.md).
+
+## License
+
+MIT — see [LICENSE](LICENSE).

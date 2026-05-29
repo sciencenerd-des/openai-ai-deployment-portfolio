@@ -1,0 +1,12 @@
+# One-click deploy on Render (https://render.com).
+# The service boots in mock mode; add OPENAI_API_KEY in the dashboard for live mode.
+services:
+  - type: web
+    name: bharat-doc-intelligence
+    runtime: docker
+    plan: free
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: BDI_MODEL
+        value: gpt-4o-mini

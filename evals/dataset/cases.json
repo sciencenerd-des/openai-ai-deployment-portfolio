@@ -1,0 +1,80 @@
+[
+  {
+    "name": "clean_intrastate_invoice",
+    "expected_codes": [],
+    "doc": {
+      "document_type": "tax_invoice",
+      "invoice_number": "INV-2024-0042",
+      "supplier_gstin": "27AAPFU0939F1ZV",
+      "buyer_gstin": "27AACCM1234C1Z2",
+      "line_items": [
+        {"description": "Basmati Rice 25kg", "quantity": 4, "unit_price": 1450.0, "amount": 5800.0}
+      ],
+      "subtotal": 5800.0,
+      "total_tax": 290.0,
+      "grand_total": 6090.0,
+      "tax_breakup": {"taxable_value": 5800.0, "cgst": 145.0, "sgst": 145.0, "igst": 0.0}
+    }
+  },
+  {
+    "name": "bad_gstin_checksum",
+    "expected_codes": ["gstin_invalid"],
+    "doc": {
+      "document_type": "tax_invoice",
+      "supplier_gstin": "29AAAAA0000A1Z9",
+      "line_items": [{"description": "X", "quantity": 1, "unit_price": 100.0, "amount": 100.0}],
+      "subtotal": 100.0, "total_tax": 0.0, "grand_total": 100.0
+    }
+  },
+  {
+    "name": "missing_supplier_gstin",
+    "expected_codes": ["missing_supplier_gstin"],
+    "doc": {
+      "document_type": "tax_invoice",
+      "line_items": [{"description": "X", "quantity": 1, "unit_price": 50.0, "amount": 50.0}],
+      "subtotal": 50.0, "total_tax": 0.0, "grand_total": 50.0
+    }
+  },
+  {
+    "name": "line_amount_mismatch",
+    "expected_codes": ["line_amount_mismatch", "subtotal_mismatch"],
+    "doc": {
+      "document_type": "receipt",
+      "line_items": [{"description": "USB-C Cable", "quantity": 2, "unit_price": 299.0, "amount": 698.0}],
+      "subtotal": 598.0, "total_tax": 0.0, "grand_total": 598.0
+    }
+  },
+  {
+    "name": "grand_total_mismatch",
+    "expected_codes": ["grand_total_mismatch"],
+    "doc": {
+      "document_type": "tax_invoice",
+      "supplier_gstin": "29AABCT1332L1ZA",
+      "line_items": [{"description": "Service", "quantity": 1, "unit_price": 1000.0, "amount": 1000.0}],
+      "subtotal": 1000.0, "total_tax": 180.0, "grand_total": 1200.0,
+      "tax_breakup": {"taxable_value": 1000.0, "igst": 180.0}
+    }
+  },
+  {
+    "name": "mixed_tax_heads",
+    "expected_codes": ["mixed_tax_heads"],
+    "doc": {
+      "document_type": "tax_invoice",
+      "supplier_gstin": "07AAACG2115R1ZJ",
+      "line_items": [{"description": "Goods", "quantity": 1, "unit_price": 1000.0, "amount": 1000.0}],
+      "subtotal": 1000.0, "total_tax": 180.0, "grand_total": 1180.0,
+      "tax_breakup": {"taxable_value": 1000.0, "cgst": 90.0, "sgst": 90.0, "igst": 180.0}
+    }
+  },
+  {
+    "name": "cgst_sgst_asymmetry",
+    "expected_codes": ["cgst_sgst_asymmetry"],
+    "doc": {
+      "document_type": "tax_invoice",
+      "supplier_gstin": "33AAAAA0000A1Z9",
+      "line_items": [{"description": "Goods", "quantity": 1, "unit_price": 1000.0, "amount": 1000.0}],
+      "subtotal": 1000.0, "total_tax": 180.0, "grand_total": 1180.0,
+      "tax_breakup": {"taxable_value": 1000.0, "cgst": 100.0, "sgst": 80.0, "igst": 0.0}
+    }
+  }
+]
