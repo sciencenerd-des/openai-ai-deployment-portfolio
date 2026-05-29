@@ -13,6 +13,12 @@ regional languages — and get back **structured, validated data** with the dodg
 bits flagged: invalid GSTINs, line-item maths that doesn't add up, CGST/SGST
 that isn't symmetric, IGST mixed with CGST/SGST, and more.
 
+The app also includes mock-first GST workflow features from the market research
+roadmap: **GSTR-2B ↔ purchase-register reconciliation**, GSTIN status checks,
+offline IRN recomputation, IMS actions, per-invoice ITC verdicts
+(`claim`, `defer`, `block`), vendor follow-up drafts, notice triage, pre-file
+GSTR-1 vs 3B checks, and batch analysis without GSTN credentials.
+
 > **Design in one line:** the model *reads* the document into a typed schema;
 > deterministic Python *judges* its correctness. You never trust an LLM with
 > arithmetic you actually need to be right.
@@ -72,6 +78,23 @@ or the included [`Dockerfile`](Dockerfile).
 | IGST mixed with CGST/SGST | error | a supply is inter- *or* intra-state |
 | CGST ≠ SGST | warning | the two halves must be equal |
 
+## Reconciliation sample
+
+The research-backed compliance features run fully offline in mock mode:
+
+- `GET /api/reconcile/sample` returns a labelled sample period with matched,
+  missing, rounding mismatch, material mismatch, and blocked-credit cases.
+- `POST /api/reconcile` accepts structured `period`, `purchase_register`, and
+  `gstr2b` JSON and returns a `ReconReport`.
+- `POST /api/followups` drafts approval-gated supplier emails for invoices
+  present in the purchase register but missing from GSTR-2B.
+- `POST /api/notices/triage` classifies GST notices and drafts a human-reviewed
+  reply.
+- `POST /api/prefile-check` compares GSTR-1 and GSTR-3B values before filing.
+- `POST /api/analyze/batch` runs the existing extraction/audit pipeline over up
+  to 25 text snippets; `POST /api/analyze/batch-files` handles up to 10 uploads.
+- The UI exposes the sample as ITC and workflow panels with raw JSON for review.
+
 ## Eval results
 
 Anomaly detection is scored as a labelled multi-label task; CI fails if
@@ -106,7 +129,13 @@ OpenAI **Agents SDK** · **Responses API** (multimodal/vision) · FastAPI · Pyd
 ## Roadmap
 
 - [x] Distinctive "auditor's ledger" UI + screenshots in this README.
-- [ ] Second agent (handoff) that drafts a corrected, GST-compliant invoice.
+- [x] Mock-first GSTR-2B ↔ purchase-register reconciliation with IMS actions.
+- [x] ITC claim/defer/block scoring and ITC-at-risk totals.
+- [x] GSTIN status and offline IRN verification scaffolding at intake.
+- [x] Approval-gated supplier follow-up drafts for missing 2B invoices.
+- [x] Notice triage and pre-file mismatch checks as deterministic workflow demos.
+- [x] Batch ingestion endpoint and regional-language mock fixtures.
+- [ ] Live GSP/GSTN adapter behind the existing mock-first interfaces.
 - [ ] Stream partial extraction to the UI via Agents SDK streaming events.
 - [ ] Expand the eval set with real regional-language document scans.
 

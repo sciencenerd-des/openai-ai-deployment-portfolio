@@ -224,6 +224,18 @@
       color: var(--ink); border-top: 1px solid var(--rule); margin-top: 5px; padding-top: 8px; }
     .totals .row .tax { color: var(--faint); font-size: 10.5px; }
 
+    .recon-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+    .metric { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface-2); padding: 10px 12px; }
+    .metric .k { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+    .metric .v { font-size: 20px; font-weight: 650; margin-top: 3px; }
+    .pill { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
+      border-radius: 999px; padding: 3px 7px; display: inline-flex; border: 1px solid currentColor; }
+    .pill.claim, .pill.accept { color: var(--green); }
+    .pill.defer, .pill.pending { color: var(--amber); }
+    .pill.block, .pill.reject { color: var(--red); }
+    .recon-row td { vertical-align: top; }
+    .reason { color: var(--muted); font-size: 10.5px; margin-top: 4px; max-width: 32ch; }
+
     details.raw { margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 12px; }
     details.raw summary { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em;
       text-transform: uppercase; color: var(--faint); cursor: pointer; }
@@ -331,6 +343,7 @@
         font-size: 11px;
       }
       .totals .row.grand { font-size: 16px; }
+      .recon-summary { grid-template-columns: repeat(2, 1fr); }
       details.raw pre { font-size: 10.5px; }
       footer {
         font-size: 9.5px;
@@ -356,6 +369,33 @@
       <span>Agents SDK · Responses API · Pydantic validation</span>
       <span id="meta-right">model —</span>
     </div>
+
+    <section class="panel in two" style="margin-top:18px">
+      <h2 class="panel-h"><span class="num">3</span> Reconcile ITC</h2>
+      <div id="recon">
+        <div class="empty">
+          <span class="stamp-ghost">GSTR-2B sample</span>
+          <p>Run the mock reconciliation to see IMS actions and ITC verdicts from the market research roadmap.</p>
+          <button id="run-recon" class="btn" style="max-width:280px;margin:18px auto 0"><span class="spin"></span><span class="lbl">Run sample reconciliation</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel in two" style="margin-top:18px">
+      <h2 class="panel-h"><span class="num">4</span> Compliance workflows</h2>
+      <div class="recon-summary">
+        <button id="run-followups" class="btn" style="margin:0"><span class="spin"></span><span class="lbl">Draft follow-ups</span></button>
+        <button id="run-prefile" class="btn" style="margin:0"><span class="spin"></span><span class="lbl">Check GSTR-1 vs 3B</span></button>
+        <button id="run-notice" class="btn" style="margin:0"><span class="spin"></span><span class="lbl">Triage notice</span></button>
+        <button id="run-batch" class="btn" style="margin:0"><span class="spin"></span><span class="lbl">Batch analyze</span></button>
+      </div>
+      <div id="workflow-output">
+        <div class="empty" style="padding:22px 6px">
+          <span class="stamp-ghost">Human review gated</span>
+          <p>Drafts and notice replies are generated for review only, never auto-sent or auto-filed.</p>
+        </div>
+      </div>
+    </section>
 
     <div class="grid">
       <!-- INPUT -->
@@ -513,6 +553,60 @@
       });
     }
 
+    function renderRecon(rep) {
+      const rows = (rep.matches || []).map(m => {
+        const line = m.register_line || m.gstr2b_line || {};
+        const gstin = line.supplier_gstin || line.ctin || "—";
+        const verdict = (m.itc && m.itc.verdict) || "block";
+        const amount = m.gstr2b_line || m.register_line || {};
+        const itc = (amount.igst || 0) + (amount.cgst || 0) + (amount.sgst || 0) + (amount.cess || 0);
+        const reasons = m.itc ? (m.itc.reasons || []).join(" ") : "";
+        return `<tr class="recon-row">
+          <td>${esc(gstin)}<div class="reason">${esc(line.invoice_number || "—")} · ${esc(line.invoice_date || "—")}</div></td>
+          <td><span class="pill ${m.status.includes("mismatch") ? "reject" : verdict}">${esc(m.status.replace(/_/g, " "))}</span></td>
+          <td><span class="pill ${esc(m.ims_action)}">${esc(m.ims_action)}</span></td>
+          <td><span class="pill ${verdict}">${esc(verdict)}</span><div class="reason">${esc(reasons)}</div></td>
+          <td class="num">${fmt(itc)}</td>
+        </tr>`;
+      }).join("");
+
+      $("recon").innerHTML = `
+        <div class="recon-summary">
+          <div class="metric"><div class="k">Claim now</div><div class="v" style="color:var(--green)">₹${fmt(rep.summary.claimable_itc)}</div></div>
+          <div class="metric"><div class="k">Defer</div><div class="v" style="color:var(--amber)">₹${fmt(rep.summary.deferred_itc)}</div></div>
+          <div class="metric"><div class="k">Block</div><div class="v" style="color:var(--red)">₹${fmt(rep.summary.blocked_itc)}</div></div>
+          <div class="metric"><div class="k">Lines</div><div class="v">${fmt(rep.summary.total).replace(".00","")}</div></div>
+        </div>
+        <table class="items">
+          <thead><tr><th>Supplier / invoice</th><th>Status</th><th>IMS</th><th>ITC verdict</th><th class="num">ITC</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <details class="raw"><summary>View raw reconciliation (JSON)</summary>
+          <pre>${esc(JSON.stringify(rep, null, 2))}</pre></details>
+      `;
+    }
+
+    function renderWorkflow(title, payload) {
+      $("workflow-output").innerHTML = `
+        <div class="section-t">${esc(title)}</div>
+        <details class="raw" open><summary>View workflow result (JSON)</summary>
+          <pre>${esc(JSON.stringify(payload, null, 2))}</pre></details>
+      `;
+    }
+
+    async function withButton(id, label, task) {
+      const btn = $(id);
+      btn.classList.add("loading"); btn.disabled = true;
+      btn.querySelector(".lbl").textContent = label;
+      try {
+        await task();
+      } catch (e) {
+        $("workflow-output").innerHTML = `<div class="note error"><span class="sev">error</span><span>${esc(e.message)}</span></div>`;
+      } finally {
+        btn.classList.remove("loading"); btn.disabled = false;
+      }
+    }
+
     /* ---- submit ---- */
     $("run").addEventListener("click", async () => {
       const btn = $("run");
@@ -534,6 +628,73 @@
         btn.querySelector(".lbl").textContent = "Analyze document";
       }
     });
+
+    $("run-recon").addEventListener("click", async () => {
+      const btn = $("run-recon");
+      btn.classList.add("loading"); btn.disabled = true;
+      btn.querySelector(".lbl").textContent = "Reconciling...";
+      try {
+        const r = await fetch("/api/reconcile/sample");
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        renderRecon(await r.json());
+      } catch (e) {
+        $("recon").innerHTML = `<div class="note error"><span class="sev">error</span><span>${esc(e.message)}</span></div>`;
+      } finally {
+        btn.classList.remove("loading"); btn.disabled = false;
+        btn.querySelector(".lbl").textContent = "Run sample reconciliation";
+      }
+    });
+
+    $("run-followups").addEventListener("click", async () => withButton("run-followups", "Drafting...", async () => {
+      const report = await (await fetch("/api/reconcile/sample")).json();
+      const r = await fetch("/api/followups", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(report)
+      });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      renderWorkflow("Vendor follow-up drafts", await r.json());
+      $("run-followups").querySelector(".lbl").textContent = "Draft follow-ups";
+    }));
+
+    $("run-prefile").addEventListener("click", async () => withButton("run-prefile", "Checking...", async () => {
+      const r = await fetch("/api/prefile-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          period: "2026-04",
+          gstr1_taxable_value: 1000000,
+          gstr1_tax: 180000,
+          gstr3b_taxable_value: 900000,
+          gstr3b_tax: 70000
+        })
+      });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      renderWorkflow("Pre-file mismatch check", await r.json());
+      $("run-prefile").querySelector(".lbl").textContent = "Check GSTR-1 vs 3B";
+    }));
+
+    $("run-notice").addEventListener("click", async () => withButton("run-notice", "Triaging...", async () => {
+      const r = await fetch("/api/notices/triage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ period: "2026-04", text: "DRC-01C issued under Rule 88D for excess ITC compared with GSTR-2B." })
+      });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      renderWorkflow("Notice triage", await r.json());
+      $("run-notice").querySelector(".lbl").textContent = "Triage notice";
+    }));
+
+    $("run-batch").addEventListener("click", async () => withButton("run-batch", "Analyzing...", async () => {
+      const r = await fetch("/api/analyze/batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ texts: ["normal invoice", "dirty receipt with anomaly"] })
+      });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      renderWorkflow("Batch analysis", await r.json());
+      $("run-batch").querySelector(".lbl").textContent = "Batch analyze";
+    }));
 
     loadHealth();
   </script>

@@ -27,6 +27,7 @@ regional languages such as Hindi, Tamil, Telugu, Bengali, and Marathi.
 Extract every field of the ExtractedInvoice schema as faithfully as possible:
 - Transcribe numbers exactly as printed; do not "fix" arithmetic.
 - Normalise the invoice date to ISO 8601 (YYYY-MM-DD) when you can read it.
+- Extract the printed IRN and document subtype (INV, CRN, DBN) when present.
 - Set detected_language to the primary language of the document.
 - Use the validate_gstin tool to check any GSTIN you read; if it is invalid,
   still report the number exactly as printed and note the issue in `notes`.

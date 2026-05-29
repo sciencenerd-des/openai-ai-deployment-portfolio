@@ -57,10 +57,34 @@ _DIRTY = ExtractedInvoice(
     notes="Mock extraction (no API key configured).",
 )
 
+_HINDI = _CLEAN.model_copy(
+    deep=True,
+    update={
+        "invoice_number": "HI-2026-001",
+        "supplier_name": "Saraswati Traders",
+        "detected_language": "hi",
+        "notes": "Mock Hindi/regional-language extraction fixture.",
+    },
+)
+
+_TAMIL = _CLEAN.model_copy(
+    deep=True,
+    update={
+        "invoice_number": "TA-2026-001",
+        "supplier_name": "Saraswati Traders",
+        "detected_language": "ta",
+        "notes": "Mock Tamil/regional-language extraction fixture.",
+    },
+)
+
 
 def mock_extract(text: str | None) -> ExtractedInvoice:
     """Pick a fixture based on a hint in the text; default to the clean invoice."""
     hint = (text or "").lower()
     if "dirty" in hint or "anomaly" in hint or "error" in hint:
         return _DIRTY.model_copy(deep=True)
+    if "hindi" in hint or "हिन्दी" in hint or "हिंदी" in hint:
+        return _HINDI.model_copy(deep=True)
+    if "tamil" in hint or "தமிழ்" in hint:
+        return _TAMIL.model_copy(deep=True)
     return _CLEAN.model_copy(deep=True)
