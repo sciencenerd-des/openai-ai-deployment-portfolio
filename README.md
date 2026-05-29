@@ -24,7 +24,13 @@ that isn't symmetric, IGST mixed with CGST/SGST, and more.
 
 See [`docs/architecture.md`](docs/architecture.md) for the full diagram and rationale.
 
-> 📸 _Add a screenshot/GIF of the running UI here (`web/index.html`) — see TODO in the Roadmap._
+| Clean document → **Validated** | Tampered document → **Flagged** |
+|---|---|
+| ![Validated](docs/screenshots/validated.png) | ![Flagged](docs/screenshots/flagged.png) |
+
+The interface is styled as an *auditor's ledger* — warm paper, ledger rules, and a
+rubber-stamp verdict — rather than a generic dashboard. The bad GSTIN and broken
+totals on the right are caught by the deterministic audit layer, not the model.
 
 ## Quickstart (zero API key, ~30 seconds)
 
@@ -96,7 +102,7 @@ OpenAI **Agents SDK** · **Responses API** (multimodal/vision) · FastAPI · Pyd
 
 ## Roadmap
 
-- [ ] Add a UI screenshot + GIF to this README.
+- [x] Distinctive "auditor's ledger" UI + screenshots in this README.
 - [ ] Second agent (handoff) that drafts a corrected, GST-compliant invoice.
 - [ ] Stream partial extraction to the UI via Agents SDK streaming events.
 - [ ] Expand the eval set with real regional-language document scans.

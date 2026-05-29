@@ -3,110 +3,440 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bharat Doc Intelligence</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Bharat Doc Intelligence — the auditor's ledger</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23ece2cf'/%3E%3Cg transform='rotate(-8 16 16)'%3E%3Crect x='7.5' y='9.5' width='17' height='13' rx='2' fill='none' stroke='%23b9410f' stroke-width='2'/%3E%3Ctext x='16' y='18.6' font-family='Georgia,serif' font-size='8' font-weight='900' fill='%23b9410f' text-anchor='middle'%3EBDI%3C/text%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@500;600&display=swap" rel="stylesheet">
   <style>
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    :root {
+      --paper:    #ece2cf;
+      --paper-2:  #f5efe1;
+      --paper-3:  #f9f5ea;
+      --ink:      #1d1813;
+      --ink-soft: #5d5247;
+      --ink-faint:#8a7d6e;
+      --rule:     rgba(29,24,19,.13);
+      --rule-2:   rgba(29,24,19,.07);
+      --accent:   #b9410f;   /* burnt vermillion */
+      --accent-d: #8f3009;
+      --green:    #2f6b3f;
+      --green-bg: #e4ecdd;
+      --red:      #a8261b;
+      --red-bg:   #f3ddd6;
+      --amber:    #9c6312;
+      --amber-bg: #f1e4cd;
+      --shadow:   0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(29,24,19,.55);
+      --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(transparent, transparent 31px, var(--rule-2) 31px, var(--rule-2) 32px),
+        radial-gradient(120% 90% at 80% -10%, var(--paper-3), var(--paper) 60%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      position: relative;
+      line-height: 1.5;
+    }
+    /* film grain */
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      opacity: .045; mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .wrap { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
+
+    /* ---------- masthead ---------- */
+    header.mast {
+      border-bottom: 2px solid var(--ink);
+      margin-top: 30px; padding-bottom: 14px;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
+      animation: rise .7s cubic-bezier(.2,.7,.2,1) both;
+    }
+    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .kicker {
+      font-family: var(--mono); font-size: 10.5px; letter-spacing: .42em;
+      text-transform: uppercase; color: var(--accent); font-weight: 600;
+    }
+    .title {
+      font-family: "Fraunces", serif; font-optical-sizing: auto;
+      font-weight: 900; font-size: clamp(30px, 5vw, 52px); line-height: .98;
+      letter-spacing: -.02em; margin: 2px 0 0;
+    }
+    .title .deva { font-family: "IBM Plex Sans Devanagari", sans-serif; font-weight: 600;
+      font-size: .5em; color: var(--accent); vertical-align: middle; margin-left: .5em;
+      letter-spacing: 0; }
+    .sub { font-size: 13px; color: var(--ink-soft); max-width: 38ch; }
+    .badge {
+      font-family: var(--mono); font-size: 11px; font-weight: 600; white-space: nowrap;
+      border: 1.5px solid var(--ink); border-radius: 2px; padding: 6px 11px;
+      display: inline-flex; align-items: center; gap: 7px; background: var(--paper-2);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); }
+    .badge.live .dot { background: var(--green); box-shadow: 0 0 0 3px rgba(47,107,63,.2); }
+    .badge.mock .dot { background: var(--amber); box-shadow: 0 0 0 3px rgba(156,99,18,.18); }
+
+    .meta-line {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--ink-faint);
+      padding: 9px 0; border-bottom: 1px solid var(--rule); margin-bottom: 30px;
+      animation: rise .7s .05s cubic-bezier(.2,.7,.2,1) both;
+    }
+
+    /* ---------- layout ---------- */
+    .grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 30px; align-items: start; }
+    @media (max-width: 880px){ .grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px; padding: 22px 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .panel.in { animation: rise .7s .12s cubic-bezier(.2,.7,.2,1) both; }
+    .panel.in.two { animation-delay: .2s; }
+    .panel-h {
+      font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--ink-soft); display: flex; align-items: center; gap: 9px; margin: 0 0 16px;
+    }
+    .panel-h .num {
+      font-family: "Fraunces", serif; font-weight: 900; font-size: 15px; color: var(--accent);
+      border: 1.5px solid var(--accent); border-radius: 50%; width: 23px; height: 23px;
+      display: grid; place-items: center; letter-spacing: 0;
+    }
+    label.fld { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft);
+      letter-spacing: .02em; margin: 0 0 7px; }
+
+    /* dropzone */
+    .drop {
+      border: 1.5px dashed var(--ink-faint); border-radius: 4px; background: var(--paper-3);
+      padding: 26px 18px; text-align: center; cursor: pointer; transition: .18s ease;
+      color: var(--ink-soft); position: relative; overflow: hidden;
+    }
+    .drop:hover, .drop.over { border-color: var(--accent); background: #fdfaf2; color: var(--ink); }
+    .drop svg { width: 30px; height: 30px; stroke: var(--accent); margin-bottom: 6px; }
+    .drop .big { font-weight: 600; font-size: 14px; color: var(--ink); }
+    .drop .small { font-size: 11.5px; color: var(--ink-faint); font-family: var(--mono); }
+    .drop input { display: none; }
+    #preview { display: none; margin-top: 12px; }
+    #preview img { width: 100%; border-radius: 3px; border: 1px solid var(--rule); display: block; }
+    #preview .cap { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+      margin-top: 5px; display: flex; justify-content: space-between; }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: var(--ink-faint);
+      font-family: var(--mono); font-size: 10px; letter-spacing: .2em; }
+    .divider::before, .divider::after { content:""; height:1px; flex:1; background: var(--rule); }
+
+    textarea {
+      width: 100%; border: 1px solid var(--rule); border-radius: 3px; background: var(--paper-3);
+      padding: 11px 12px; font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+      resize: vertical; min-height: 92px; line-height: 1.55;
+    }
+    textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(185,65,15,.12); }
+
+    .btn {
+      margin-top: 18px; width: 100%; cursor: pointer;
+      font-family: "Fraunces", serif; font-weight: 600; font-size: 16px; letter-spacing: .01em;
+      color: var(--paper-3); background: var(--ink); border: none; border-radius: 3px;
+      padding: 13px 18px; box-shadow: 4px 4px 0 var(--accent); transition: transform .12s, box-shadow .12s;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+    }
+    .btn:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--accent); }
+    .btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--accent); }
+    .btn[disabled] { opacity: .55; cursor: progress; box-shadow: 4px 4px 0 var(--ink-faint); }
+    .btn .spin { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.4);
+      border-top-color: var(--paper-3); border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+    .btn.loading .spin { display: inline-block; }
+    .hint { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); margin-top: 9px; min-height: 14px; }
+
+    /* ---------- report ---------- */
+    .empty { text-align: center; color: var(--ink-faint); padding: 38px 10px; }
+    .empty .stamp-ghost { font-family: "Fraunces", serif; font-weight: 900; font-size: 19px;
+      letter-spacing: .12em; color: var(--rule); border: 2.5px solid var(--rule); display: inline-block;
+      padding: 8px 18px; border-radius: 4px; transform: rotate(-4deg); }
+    .empty p { font-size: 12.5px; margin-top: 16px; }
+
+    .verdict { display: flex; align-items: center; gap: 18px; margin-bottom: 20px;
+      padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
+    .stamp {
+      flex: none; font-family: "Fraunces", serif; font-weight: 900; font-size: 19px; letter-spacing: .08em;
+      text-transform: uppercase; padding: 9px 15px 7px; border-radius: 5px; line-height: 1;
+      border: 3px double currentColor; transform: rotate(-6deg);
+      position: relative; text-align: center;
+      animation: stamp .5s cubic-bezier(.2,1.4,.4,1) both;
+    }
+    .stamp small { display: block; font-family: var(--mono); font-size: 8.5px; letter-spacing: .2em;
+      font-weight: 500; opacity: .8; margin-top: 3px; }
+    .stamp.ok  { color: var(--green); }
+    .stamp.bad { color: var(--red); }
+    .stamp::after { content:""; position:absolute; inset:-3px; border-radius:5px; opacity:.12;
+      background: currentColor; mix-blend-mode: multiply; }
+    .gauge { flex: 1; }
+    .gauge .lab { display: flex; justify-content: space-between; font-family: var(--mono);
+      font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+    .gauge .lab b { font-family: "Fraunces", serif; font-size: 17px; color: var(--ink); letter-spacing: 0; }
+    .meter { height: 9px; border-radius: 6px; background: var(--rule); overflow: hidden; }
+    .meter > i { display: block; height: 100%; width: 0; border-radius: 6px;
+      transition: width 1.1s cubic-bezier(.2,.8,.2,1); }
+
+    .section-t { font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ink-faint); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .section-t::after { content:""; flex:1; height:1px; background: var(--rule); }
+
+    .note { border: 1px solid; border-radius: 3px; padding: 9px 12px; margin-bottom: 8px;
+      font-size: 12.5px; display: flex; gap: 10px; align-items: baseline;
+      animation: rise .45s cubic-bezier(.2,.7,.2,1) both; }
+    .note .sev { font-family: var(--mono); font-size: 8.5px; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; padding: 2px 6px; border-radius: 2px; flex: none; }
+    .note.error   { background: var(--red-bg);   border-color: rgba(168,38,27,.32); color: #5e1812; }
+    .note.error .sev   { background: var(--red);   color: #fff; }
+    .note.warning { background: var(--amber-bg); border-color: rgba(156,99,18,.32); color: #5a3a08; }
+    .note.warning .sev { background: var(--amber); color: #fff; }
+    .note.info, .note.ok { background: var(--green-bg); border-color: rgba(47,107,63,.32); color: #1f4429; }
+    .note.info .sev, .note.ok .sev { background: var(--green); color: #fff; }
+    .note code { font-family: var(--mono); font-size: 10.5px; opacity: .7; }
+
+    /* ledger */
+    .ledger { font-family: var(--mono); font-size: 12px; }
+    .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule);
+      border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+    .kv > div { background: var(--paper-3); padding: 8px 11px; }
+    .kv .k { font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .kv .v { font-weight: 500; color: var(--ink); word-break: break-word; }
+    .kv .v.bad { color: var(--red); }
+    .kv .v.bad::after { content:" ✕ invalid"; font-size: 9px; letter-spacing: .1em; }
+    .kv .span2 { grid-column: 1 / -1; }
+
+    table.items { width: 100%; border-collapse: collapse; margin-top: 6px; font-family: var(--mono); font-size: 11.5px; }
+    table.items th { text-align: left; font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-faint); border-bottom: 1.5px solid var(--ink); padding: 6px 8px; font-weight: 600; }
+    table.items td { padding: 7px 8px; border-bottom: 1px solid var(--rule); }
+    table.items td.num, table.items th.num { text-align: right; }
+    table.items tr:last-child td { border-bottom: none; }
+
+    .totals { margin-top: 10px; border-top: 1.5px solid var(--ink); padding-top: 10px; }
+    .totals .row { display: flex; justify-content: space-between; font-family: var(--mono);
+      font-size: 12px; padding: 3px 2px; color: var(--ink-soft); }
+    .totals .row.grand { font-family: "Fraunces", serif; font-size: 19px; font-weight: 900;
+      color: var(--ink); border-top: 1px solid var(--rule); margin-top: 5px; padding-top: 8px; }
+    .totals .row .tax { color: var(--ink-faint); font-size: 10.5px; }
+
+    details.raw { margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 12px; }
+    details.raw summary { font-family: var(--mono); font-size: 10.5px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--ink-faint); cursor: pointer; }
+    details.raw pre { background: var(--ink); color: #e9e0cf; font-family: var(--mono); font-size: 11px;
+      padding: 14px; border-radius: 4px; overflow: auto; max-height: 300px; margin-top: 10px; line-height: 1.5; }
+
+    footer { text-align: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+      color: var(--ink-faint); margin: 46px 0 30px; padding-top: 18px; border-top: 1px solid var(--rule); }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    @keyframes stamp { 0% { opacity: 0; transform: rotate(-6deg) scale(2.4); }
+      60% { opacity: 1; } 100% { opacity: 1; transform: rotate(-6deg) scale(1); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce){ * { animation: none !important; transition: none !important; } }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
-  <div class="max-w-5xl mx-auto px-4 py-8">
-    <header class="flex items-center justify-between mb-6">
-      <div>
-        <h1 class="text-2xl font-bold">Bharat Doc Intelligence</h1>
-        <p class="text-slate-500 text-sm">
-          Multimodal GST-document understanding for Indian SMBs ·
-          OpenAI Agents SDK + Responses API
-        </p>
+<body>
+  <div class="wrap">
+    <header class="mast">
+      <div class="brand">
+        <span class="kicker">Multimodal GST Audit</span>
+        <h1 class="title">Bharat Doc Intelligence<span class="deva">भारत</span></h1>
+        <p class="sub">Reads Indian invoices &amp; receipts — even regional-language scans — into verified, structured data.</p>
       </div>
-      <span id="mode-badge" class="text-xs px-2 py-1 rounded-full bg-slate-200 text-slate-600">…</span>
+      <span id="mode-badge" class="badge"><span class="dot"></span><span class="txt">connecting…</span></span>
     </header>
 
-    <div class="grid md:grid-cols-2 gap-6">
-      <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <h2 class="font-semibold mb-3">1 · Provide a document</h2>
-        <label class="block text-sm text-slate-600 mb-1">Invoice / receipt image</label>
-        <input id="file" type="file" accept="image/*"
-               class="block w-full text-sm mb-4 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-white" />
-        <label class="block text-sm text-slate-600 mb-1">…or paste text / a hint</label>
-        <textarea id="text" rows="4" placeholder="Paste OCR text, or type 'dirty' to see anomaly detection in mock mode"
-                  class="w-full border border-slate-300 rounded-lg p-2 text-sm mono"></textarea>
-        <button id="run"
-                class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg">
-          Analyze document
-        </button>
-        <p id="status" class="text-xs text-slate-400 mt-2"></p>
+    <div class="meta-line">
+      <span>OpenAI Agents SDK · Responses API (vision)</span>
+      <span id="meta-right">model —</span>
+    </div>
+
+    <div class="grid">
+      <!-- INPUT -->
+      <section class="panel in">
+        <h2 class="panel-h"><span class="num">1</span> Submit a document</h2>
+
+        <label class="fld">Invoice or receipt image</label>
+        <div class="drop" id="drop">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 19h14"/></svg>
+          <div class="big">Drop an image, or click to browse</div>
+          <div class="small">PNG · JPG · WEBP — incl. हिन्दी / தமிழ் / বাংলা scans</div>
+          <input id="file" type="file" accept="image/*" />
+        </div>
+        <div id="preview"><img id="preview-img" alt="document preview"/><div class="cap"><span id="preview-name"></span><span id="preview-clear" style="cursor:pointer;color:var(--accent)">remove ✕</span></div></div>
+
+        <div class="divider">and / or</div>
+
+        <label class="fld">Paste OCR text or a hint</label>
+        <textarea id="text" placeholder="Paste invoice text… or type &quot;dirty&quot; to watch the audit layer catch a bad GSTIN and broken totals (mock mode)."></textarea>
+
+        <button id="run" class="btn"><span class="spin"></span><span class="lbl">Stamp &amp; Audit</span></button>
+        <div class="hint" id="status"></div>
       </section>
 
-      <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="font-semibold">2 · Report</h2>
-          <span id="confidence" class="text-sm font-semibold"></span>
+      <!-- REPORT -->
+      <section class="panel in two">
+        <h2 class="panel-h"><span class="num">2</span> Audit report</h2>
+        <div id="report">
+          <div class="empty">
+            <span class="stamp-ghost">awaiting document</span>
+            <p>Submit a document to extract its fields and run the deterministic GST audit.</p>
+          </div>
         </div>
-        <div id="anomalies" class="space-y-2 mb-4"></div>
-        <pre id="json" class="bg-slate-900 text-slate-100 text-xs rounded-lg p-3 overflow-auto mono" style="max-height:340px"></pre>
       </section>
     </div>
-    <footer class="text-center text-xs text-slate-400 mt-8">
-      Runs in <span class="mono">mock</span> mode with no API key, or <span class="mono">live</span> mode with OPENAI_API_KEY.
+
+    <footer>
+      Runs in <b style="color:var(--amber)">mock</b> mode with no key, or <b style="color:var(--green)">live</b> mode with OPENAI_API_KEY ·
+      <a href="https://github.com/sciencenerd-des/openai-ai-deployment-portfolio">source on GitHub</a>
     </footer>
   </div>
 
   <script>
     const $ = (id) => document.getElementById(id);
+    const fmt = (n) => (n === null || n === undefined) ? "—"
+      : Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
 
+    /* ---- health ---- */
     async function loadHealth() {
       try {
-        const r = await fetch("/api/health");
-        const h = await r.json();
-        const badge = $("mode-badge");
-        badge.textContent = h.mode + " · " + h.model;
-        badge.className = "text-xs px-2 py-1 rounded-full " +
-          (h.mode === "live" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700");
-      } catch (e) { /* ignore */ }
-    }
-
-    function sevColor(s) {
-      return s === "error" ? "bg-red-50 text-red-700 border-red-200"
-           : s === "warning" ? "bg-amber-50 text-amber-700 border-amber-200"
-           : "bg-sky-50 text-sky-700 border-sky-200";
-    }
-
-    function render(report) {
-      $("confidence").textContent = "confidence " + (report.confidence * 100).toFixed(0) + "%";
-      $("confidence").className = "text-sm font-semibold " +
-        (report.confidence > 0.8 ? "text-emerald-600" : report.confidence > 0.5 ? "text-amber-600" : "text-red-600");
-
-      const box = $("anomalies");
-      box.innerHTML = "";
-      if (!report.anomalies.length) {
-        box.innerHTML = '<div class="border rounded-lg p-2 text-sm bg-emerald-50 text-emerald-700 border-emerald-200">No anomalies detected ✓</div>';
+        const h = await (await fetch("/api/health")).json();
+        const b = $("mode-badge");
+        b.className = "badge " + h.mode;
+        b.querySelector(".txt").textContent = h.mode.toUpperCase() + " MODE";
+        $("meta-right").textContent = "model · " + h.model;
+      } catch (e) {
+        $("mode-badge").querySelector(".txt").textContent = "offline";
       }
-      for (const a of report.anomalies) {
-        const el = document.createElement("div");
-        el.className = "border rounded-lg p-2 text-sm " + sevColor(a.severity);
-        el.innerHTML = `<span class="font-semibold uppercase text-[10px]">${a.severity}</span> · ${a.message}`;
-        box.appendChild(el);
-      }
-      $("json").textContent = JSON.stringify(report.extracted, null, 2);
     }
 
+    /* ---- file handling ---- */
+    const drop = $("drop"), fileInput = $("file");
+    drop.addEventListener("click", () => fileInput.click());
+    drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+    drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+    drop.addEventListener("drop", e => {
+      e.preventDefault(); drop.classList.remove("over");
+      if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; showPreview(e.dataTransfer.files[0]); }
+    });
+    fileInput.addEventListener("change", () => fileInput.files[0] && showPreview(fileInput.files[0]));
+    $("preview-clear").addEventListener("click", (e) => {
+      e.stopPropagation(); fileInput.value = ""; $("preview").style.display = "none"; drop.style.display = "block";
+    });
+    function showPreview(f) {
+      const r = new FileReader();
+      r.onload = () => {
+        $("preview-img").src = r.result; $("preview-name").textContent = f.name;
+        $("preview").style.display = "block"; drop.style.display = "none";
+      };
+      r.readAsDataURL(f);
+    }
+
+    /* ---- render ---- */
+    function meterColor(c) { return c > 0.8 ? "var(--green)" : c > 0.5 ? "var(--amber)" : "var(--red)"; }
+
+    function render(rep) {
+      const ex = rep.extracted, an = rep.anomalies || [];
+      const clean = !an.some(a => a.severity === "error");
+      const badFields = new Set(an.filter(a => a.code === "gstin_invalid").map(a => a.field));
+      const tb = ex.tax_breakup || {};
+
+      const items = (ex.line_items || []).map(it => `
+        <tr><td>${esc(it.description)}</td><td>${esc(it.hsn_sac || "—")}</td>
+        <td class="num">${esc(it.quantity)}</td><td class="num">${fmt(it.unit_price)}</td>
+        <td class="num">${fmt(it.amount)}</td></tr>`).join("");
+
+      const taxParts = [];
+      if (tb.cgst) taxParts.push("CGST " + fmt(tb.cgst));
+      if (tb.sgst) taxParts.push("SGST " + fmt(tb.sgst));
+      if (tb.igst) taxParts.push("IGST " + fmt(tb.igst));
+
+      $("report").innerHTML = `
+        <div class="verdict">
+          <div class="stamp ${clean ? "ok" : "bad"}">${clean ? "Validated" : "Flagged"}<small>${rep.mode} · ${ex.document_type.replace(/_/g," ")}</small></div>
+          <div class="gauge">
+            <div class="lab"><span>Confidence</span><b>${Math.round(rep.confidence*100)}%</b></div>
+            <div class="meter"><i id="meter-fill"></i></div>
+            <div class="lab" style="margin-top:6px"><span>${an.length} anomal${an.length===1?"y":"ies"}</span><span>${badFields.size} bad gstin</span></div>
+          </div>
+        </div>
+
+        <div class="section-t">Audit notes</div>
+        ${an.length ? an.map(a => `
+          <div class="note ${a.severity}">
+            <span class="sev">${a.severity}</span>
+            <span>${esc(a.message)} <code>${esc(a.code)}</code></span>
+          </div>`).join("")
+          : `<div class="note ok"><span class="sev">clean</span><span>No anomalies — GSTINs, line maths and tax heads all reconcile.</span></div>`}
+
+        <div class="section-t">Parties</div>
+        <div class="ledger kv">
+          <div><div class="k">Supplier</div><div class="v">${esc(ex.supplier_name || "—")}</div></div>
+          <div><div class="k">Buyer</div><div class="v">${esc(ex.buyer_name || "—")}</div></div>
+          <div><div class="k">Supplier GSTIN</div><div class="v ${badFields.has("supplier_gstin")?"bad":""}">${esc(ex.supplier_gstin || "—")}</div></div>
+          <div><div class="k">Buyer GSTIN</div><div class="v ${badFields.has("buyer_gstin")?"bad":""}">${esc(ex.buyer_gstin || "—")}</div></div>
+          <div><div class="k">Invoice №</div><div class="v">${esc(ex.invoice_number || "—")}</div></div>
+          <div><div class="k">Date</div><div class="v">${esc(ex.invoice_date || "—")}</div></div>
+          <div><div class="k">Place of supply</div><div class="v">${esc(ex.place_of_supply || "—")}</div></div>
+          <div><div class="k">Language</div><div class="v">${esc(ex.detected_language || "—")}</div></div>
+        </div>
+
+        ${items ? `
+        <div class="section-t">Line items</div>
+        <table class="items">
+          <thead><tr><th>Description</th><th>HSN/SAC</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead>
+          <tbody>${items}</tbody>
+        </table>` : ""}
+
+        <div class="totals">
+          <div class="row"><span>Subtotal</span><span>${fmt(ex.subtotal)} ${esc(ex.currency||"")}</span></div>
+          <div class="row"><span>Tax <span class="tax">${taxParts.join(" · ")}</span></span><span>${fmt(ex.total_tax)}</span></div>
+          <div class="row grand"><span>Grand total</span><span>${fmt(ex.grand_total)} ${esc(ex.currency||"")}</span></div>
+        </div>
+
+        <details class="raw"><summary>View raw extraction (JSON)</summary>
+          <pre>${esc(JSON.stringify(ex, null, 2))}</pre></details>
+      `;
+
+      requestAnimationFrame(() => {
+        const fill = $("meter-fill");
+        fill.style.background = meterColor(rep.confidence);
+        fill.style.width = Math.max(4, rep.confidence*100) + "%";
+      });
+    }
+
+    /* ---- submit ---- */
     $("run").addEventListener("click", async () => {
-      $("status").textContent = "Analyzing…";
-      $("run").disabled = true;
+      const btn = $("run");
+      btn.classList.add("loading"); btn.disabled = true;
+      btn.querySelector(".lbl").textContent = "Auditing…";
+      $("status").textContent = "Reading document…";
       try {
         const fd = new FormData();
-        const f = $("file").files[0];
-        if (f) fd.append("file", f);
+        if (fileInput.files[0]) fd.append("file", fileInput.files[0]);
         if ($("text").value) fd.append("text", $("text").value);
         const r = await fetch("/api/analyze", { method: "POST", body: fd });
         if (!r.ok) throw new Error("HTTP " + r.status);
         render(await r.json());
-        $("status").textContent = "Done.";
+        $("status").textContent = "Stamped.";
       } catch (e) {
         $("status").textContent = "Error: " + e.message;
       } finally {
-        $("run").disabled = false;
+        btn.classList.remove("loading"); btn.disabled = false;
+        btn.querySelector(".lbl").textContent = "Stamp & Audit";
       }
     });
 
