@@ -1,0 +1,25 @@
+{
+  "vendor_name": "Example Traders Pvt Ltd",
+  "vendor_gstin": "27ABCDE1234F1Z5",
+  "invoice_number": "INV-001",
+  "invoice_date": "2026-05-31",
+  "currency": "INR",
+  "line_items": [
+    {
+      "description": "Office supplies",
+      "quantity": 2,
+      "unit_price": 500.0,
+      "taxable_value": 1000.0,
+      "cgst": 90.0,
+      "sgst": 90.0,
+      "igst": 0.0,
+      "total": 1180.0
+    }
+  ],
+  "subtotal": 1000.0,
+  "cgst_total": 90.0,
+  "sgst_total": 90.0,
+  "igst_total": 0.0,
+  "grand_total": 1180.0,
+  "audit_flags": []
+}
