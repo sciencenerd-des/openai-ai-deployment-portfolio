@@ -154,3 +154,76 @@ It's what drives the roadmap above.
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## Why this repo exists
+
+This project is designed as a production-style OpenAI API sample for Indian document workflows.
+
+It demonstrates:
+
+- multimodal document extraction with OpenAI vision-capable models
+- structured JSON outputs
+- deterministic validation after model generation
+- mock-first local development without API keys
+- eval-driven regression testing
+- developer-friendly FastAPI deployment
+- domain-specific error handling for Indian GST documents
+
+## Developer documentation
+
+- [Architecture](docs/architecture.md)
+- [OpenAI integration](docs/openai-integration.md)
+- [Tutorial](docs/TUTORIAL.md)
+- [Eval report](docs/eval-report.md)
+- [API reference](docs/api-reference.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Roadmap](ROADMAP.md)
+
+## Developer experience features
+
+- `USE_MOCK=1` mode for zero-key local setup
+- `.env.example` with all required variables
+- CI that runs tests and evals without secrets
+- sample invoice OCR fixture
+- deterministic GST validation layer
+- FastAPI interactive docs at `/docs`
+- Dockerfile and Render deployment config
+
+## 5-minute quickstart
+
+```bash
+git clone https://github.com/sciencenerd-des/openai-ai-deployment-portfolio.git
+cd openai-ai-deployment-portfolio
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+cp .env.example .env
+export USE_MOCK=1
+uvicorn app.main:app --reload
+```
+
+Then open:
+
+- App: http://localhost:8000
+- API docs: http://localhost:8000/docs
+
+## Running with OpenAI
+
+```bash
+export USE_MOCK=0
+export OPENAI_API_KEY="..."
+uvicorn app.main:app --reload
+```
+
+The app uses OpenAI for multimodal document understanding, then passes extracted data through deterministic GST validation and reconciliation checks.
+
+## Known limitations
+
+- This is a developer sample and workflow prototype, not tax or legal advice.
+- Accuracy depends on document quality, layout, language, and image resolution.
+- Mock mode uses deterministic fixtures and does not measure live-model accuracy.
+- The eval suite is intentionally small and should be expanded before production use.
+- Human review is recommended before filing or making financial decisions.
+
