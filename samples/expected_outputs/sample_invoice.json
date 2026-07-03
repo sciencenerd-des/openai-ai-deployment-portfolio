@@ -1,25 +1,77 @@
 {
-  "vendor_name": "Example Traders Pvt Ltd",
-  "vendor_gstin": "27ABCDE1234F1Z5",
-  "invoice_number": "INV-001",
-  "invoice_date": "2026-05-31",
-  "currency": "INR",
-  "line_items": [
-    {
-      "description": "Office supplies",
-      "quantity": 2,
-      "unit_price": 500.0,
-      "taxable_value": 1000.0,
-      "cgst": 90.0,
-      "sgst": 90.0,
-      "igst": 0.0,
-      "total": 1180.0
-    }
-  ],
-  "subtotal": 1000.0,
-  "cgst_total": 90.0,
-  "sgst_total": 90.0,
-  "igst_total": 0.0,
-  "grand_total": 1180.0,
-  "audit_flags": []
+  "mode": "mock",
+  "extracted": {
+    "document_type": "tax_invoice",
+    "invoice_number": "INV-2024-0042",
+    "invoice_date": "2024-11-18",
+    "irn": null,
+    "document_subtype": null,
+    "supplier_name": "Saraswati Traders",
+    "supplier_gstin": "27AAPFU0939F1ZV",
+    "buyer_name": "Bharat Kirana Store",
+    "buyer_gstin": "27AACCM1234C1Z2",
+    "place_of_supply": "Maharashtra (27)",
+    "currency": "INR",
+    "line_items": [
+      {
+        "description": "Basmati Rice 25kg",
+        "hsn_sac": "1006",
+        "quantity": 4.0,
+        "unit_price": 1450.0,
+        "amount": 5800.0
+      },
+      {
+        "description": "Sunflower Oil 15L",
+        "hsn_sac": "1512",
+        "quantity": 3.0,
+        "unit_price": 1980.0,
+        "amount": 5940.0
+      }
+    ],
+    "subtotal": 11740.0,
+    "total_tax": 587.0,
+    "grand_total": 12327.0,
+    "tax_breakup": {
+      "taxable_value": 11740.0,
+      "cgst": 293.5,
+      "sgst": 293.5,
+      "igst": 0.0
+    },
+    "detected_language": "en",
+    "notes": "Mock extraction (no API key configured)."
+  },
+  "anomalies": [],
+  "supplier_status": {
+    "gstin": "27AAPFU0939F1ZV",
+    "well_formed": true,
+    "registered": true,
+    "status": "Active",
+    "legal_name": "Saraswati Traders",
+    "trade_name": "Saraswati Traders",
+    "registration_date": "2017-07-01",
+    "cancellation_date": null,
+    "name_match": true,
+    "source": "mock"
+  },
+  "buyer_status": {
+    "gstin": "27AACCM1234C1Z2",
+    "well_formed": true,
+    "registered": false,
+    "status": "Unverified",
+    "legal_name": null,
+    "trade_name": null,
+    "registration_date": null,
+    "cancellation_date": null,
+    "name_match": null,
+    "source": "mock"
+  },
+  "irn_status": {
+    "irn": null,
+    "recomputed_irn": "7294375c64d025833e6d64d396462206ef8dd0c890d56f3cbf3b9127e608abd8",
+    "irn_matches": null,
+    "qr_signature_valid": null,
+    "irp_status": null,
+    "source": "offline"
+  },
+  "confidence": 1.0
 }
