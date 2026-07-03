@@ -48,7 +48,7 @@ tests, and evals run with no key and no network.
 
 ```bash
 pip install -r requirements-dev.txt
-make test        # 13 tests, all offline
+make test        # 30 tests, all offline
 make eval        # anomaly-detection eval: 100% exact-match on the curated set
 make run         # open http://localhost:8000  (type "dirty" in the box to see flags)
 ```
