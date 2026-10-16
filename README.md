@@ -2,9 +2,12 @@
 
 **Multimodal GST-document understanding for Indian SMBs — built on the OpenAI Agents SDK + Responses API.**
 
-[Live demo](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md)
+[Hosted UI](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md)
 
 [Reproduce the offline demo](docs/REVIEWER_GUIDE.md) · [Evaluation scope](docs/eval-report.md)
+
+Use the local reviewer demo to reproduce this source revision. The hosted page
+has not been validated end to end against it.
 
 [![CI](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
