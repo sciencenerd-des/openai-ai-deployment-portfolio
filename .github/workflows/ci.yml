@@ -19,5 +19,7 @@ jobs:
         run: pip install -r requirements-dev.txt
       - name: Run tests
         run: pytest -q
+      - name: Reproduce the offline API demonstration
+        run: python scripts/reviewer_demo.py
       - name: Run evals (regression gate)
         run: python -m evals.run_evals --write
