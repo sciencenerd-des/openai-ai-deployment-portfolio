@@ -9,7 +9,7 @@
 
 ## Developer experience
 
-- [ ] Add screenshots and a short demo GIF to the README.
+- [ ] Add a short demo GIF to the README (screenshots already added).
 - [ ] Add a minimal standalone extraction example under `examples/`.
 - [ ] Add richer curl examples for reconciliation and notice triage.
 - [ ] Add hosted demo status and deployment troubleshooting.

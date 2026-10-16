@@ -265,7 +265,7 @@ def sample_reconciliation_report() -> ReconReport:
             category="food",
         ),
         PurchaseLine(
-            supplier_gstin="08AAACH7409R1Z6",
+            supplier_gstin="08AAACH7409R1Z1",
             invoice_number="RJ-19",
             invoice_date="2026-04-26",
             taxable_value=1000.0,
