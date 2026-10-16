@@ -2,11 +2,21 @@
 
 **Multimodal GST-document understanding for Indian SMBs — built on the OpenAI Agents SDK + Responses API.**
 
-[Live demo](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md)
+[Hosted UI](https://openai-ai-deployment-portfolio.onrender.com) · [Architecture](docs/architecture.md) · [Tutorial](docs/TUTORIAL.md)
+
+[Reproduce the offline demo](docs/REVIEWER_GUIDE.md) · [Evaluation scope](docs/eval-report.md)
+
+Use the local reviewer demo to reproduce this source revision. The hosted page
+has not been validated end to end against it.
 
 [![CI](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sciencenerd-des/openai-ai-deployment-portfolio/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
-![license](https://img.shields.io/badge/license-MIT-green)
+[![license](https://img.shields.io/badge/license-All%20rights%20reserved-lightgrey)](LICENSE)
+
+> **Prototype scope:** Mock mode uses synthetic fixtures, including language
+> examples and registry responses. The offline eval scores seven structured
+> validator cases; it does not measure OCR or live-model accuracy. Business
+> decisions require review. See the [reviewer guide](docs/REVIEWER_GUIDE.md).
 
 Upload a photo of an Indian GST invoice or receipt — including ones printed in
 regional languages — and get back **structured, validated data** with the dodgy
@@ -153,7 +163,7 @@ It's what drives the roadmap above.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+All rights reserved — see [LICENSE](LICENSE).
 
 ---
 
